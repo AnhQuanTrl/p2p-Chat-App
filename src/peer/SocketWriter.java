@@ -28,8 +28,10 @@ public class SocketWriter extends SwingWorker<Void, Void> {
     }
 
     public void write(String text) {
-        messages.add(text);
-        System.out.println(messages);
+        synchronized (messages) {
+            messages.add(text);
+        }
+        //System.out.println(messages);
         try {
             lock.lock();
             waitCon.signalAll();
@@ -39,26 +41,25 @@ public class SocketWriter extends SwingWorker<Void, Void> {
     }
     @Override
     protected Void doInBackground() throws Exception {
-        try(OutputStream output = socket.getOutputStream()) {
-            PrintWriter writer = new PrintWriter(output, true);
-            while (!isCancelled()) {
-                while (messages.isEmpty() && !isCancelled()) {
-                    System.out.println(messages);
-                    try {
-                        lock.lock();
-                        waitCon.await();
-                    } finally {
-                        lock.unlock();
+            try (OutputStream output = socket.getOutputStream()) {
+                PrintWriter writer = new PrintWriter(output, true);
+                while (!isCancelled()) {
+                    while (messages.isEmpty() && !isCancelled()) {
+                        try {
+                            lock.lock();
+                            waitCon.await();
+                        } finally {
+                            lock.unlock();
+                        }
+                    }
+                    List<String> cache = new ArrayList<>(messages);
+                    messages.clear();
+                    for (String text : cache) {
+                        System.out.println(text);
+                        writer.println(text);
                     }
                 }
-                List<String> cache = new ArrayList<>(messages);
-                messages.clear();
-                for (String text : cache) {
-                    System.out.println(text);
-                    writer.println(text);
-                }
             }
-        }
         return null;
     }
 }

@@ -6,6 +6,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.ExecutionException;
 
 public class SessionGUI implements Runnable {
     private JFrame frame;
@@ -14,6 +15,7 @@ public class SessionGUI implements Runnable {
     private SocketWriter writer;
     private SocketReader reader;
     private Boolean initiate;
+    private Boolean fileInProgress = false;
     public SessionGUI(Socket socket, Boolean initiate) {
         this.socket = socket;
         this.initiate = initiate;
@@ -48,12 +50,53 @@ public class SessionGUI implements Runnable {
         sl_panel.putConstraint(SpringLayout.EAST, textArea, -30, SpringLayout.EAST, panel);
         textArea.setLineWrap(true);
         panel.add(textArea);
-
-        JButton btnDisconnect = new JButton("Disconect");
-        sl_panel.putConstraint(SpringLayout.NORTH, btnDisconnect, 28, SpringLayout.SOUTH, textArea);
-        sl_panel.putConstraint(SpringLayout.EAST, btnDisconnect, -166, SpringLayout.EAST, panel);
+        JButton btnDisconnect = new JButton("Disconnect");
+        sl_panel.putConstraint(SpringLayout.WEST, btnDisconnect, 0, SpringLayout.WEST, textArea);
+        sl_panel.putConstraint(SpringLayout.SOUTH, btnDisconnect, -10, SpringLayout.SOUTH, panel);
         panel.add(btnDisconnect);
 
+        JButton btnFile = new JButton("Transfer");
+        sl_panel.putConstraint(SpringLayout.NORTH, btnFile, 0, SpringLayout.NORTH, btnDisconnect);
+        sl_panel.putConstraint(SpringLayout.EAST, btnFile, 0, SpringLayout.EAST, textArea);
+        panel.add(btnFile);
+        btnDisconnect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                disconnect();
+            }
+        });
+        btnFile.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String fileName = "this.txt"; //getFileName here
+                if (!fileInProgress) {
+                    fileInProgress = true;
+                    writer.write("/REQUEST-FILE "+ fileName);
+                    reader.addFileActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            String command = e.getActionCommand();
+                            String[] args = command.split(":");
+                            if (args[0].equals("accept")) {
+                                SocketFileWriter fileWriter = new SocketFileWriter(fileName, writer);
+                                fileWriter.addPropertyChangeListener(new PropertyChangeListener() {
+                                    @Override
+                                    public void propertyChange(PropertyChangeEvent evt) {
+                                        if ("state".equals(evt.getPropertyName()) && SwingWorker.StateValue.DONE == evt.getNewValue()) {
+                                            fileInProgress = false;
+                                        }
+                                    }
+                                });
+                                fileWriter.execute();
+                            } else {
+                                fileInProgress = false;
+                                System.out.println("File denied");
+                            }
+                        }
+                    });
+                }
+            }
+        });
         textField = new JTextField();
         sl_panel.putConstraint(SpringLayout.NORTH, textField, 5, SpringLayout.SOUTH, textArea);
         sl_panel.putConstraint(SpringLayout.WEST, textField, 0, SpringLayout.WEST, textArea);
@@ -63,11 +106,14 @@ public class SessionGUI implements Runnable {
         textField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                writer.write(textField.getText());
+                writer.write("/MESSAGE " + textField.getText());
             }
         });
         frame.setVisible(true);
-        reader = new SocketReader(socket, frame);
+        writer = new SocketWriter(socket);
+        writer.execute();
+        if (initiate) writer.write("/REQUEST-SESSION");
+        reader = new SocketReader(socket, frame, writer);
         reader.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -88,15 +134,7 @@ public class SessionGUI implements Runnable {
         });
         reader.execute();
         System.out.println(socket.getRemoteSocketAddress().toString());
-        writer = new SocketWriter(socket);
-        writer.execute();
-        if (initiate) writer.write("/REQUEST-SESSION");
-        btnDisconnect.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                disconnect();
-            }
-        });
+
     }
     private void disconnect() {
         writer.write("/exit");
