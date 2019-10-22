@@ -57,10 +57,10 @@ public class RegisterGUI {
 		
 		JPanel panel_1 = new JPanel();
 		sl_panel.putConstraint(SpringLayout.SOUTH, panel_1, 145, SpringLayout.NORTH, panel);
+		sl_panel.putConstraint(SpringLayout.EAST, panel_1, 397, SpringLayout.WEST, panel);
 		panel_1.setBorder(new TitledBorder(null, "Register", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		sl_panel.putConstraint(SpringLayout.NORTH, panel_1, 10, SpringLayout.NORTH, panel);
 		sl_panel.putConstraint(SpringLayout.WEST, panel_1, 10, SpringLayout.WEST, panel);
-		sl_panel.putConstraint(SpringLayout.EAST, panel_1, -10, SpringLayout.EAST, panel);
 		panel.add(panel_1);
 		panel_1.setLayout(null);
 		
