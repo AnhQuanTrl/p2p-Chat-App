@@ -9,15 +9,14 @@ import java.util.Arrays;
 import java.util.Base64;
 
 public class SocketFileWriter extends SwingWorker<Void, Void> {
-    public SocketFileWriter(String fileName, SocketWriter writer) {
-        this.fileName = fileName;
+    public SocketFileWriter(File file, SocketWriter writer) {
+        this.file = file;
         this.writer = writer;
     }
     private SocketWriter writer;
-    private String fileName;
+    private File file;
     @Override
     protected Void doInBackground() throws Exception {
-        File file = new File(System.getProperty("user.dir") + "\\" + fileName);
         byte[] bytes = new byte[1024];
         InputStream in = new FileInputStream(file);
         int count;

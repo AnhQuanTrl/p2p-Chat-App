@@ -6,6 +6,9 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -115,11 +118,20 @@ public class SocketReader extends SwingWorker<Void, String> {
 
     private void assembleFile() {
         try {
-            FileOutputStream fileOut = new FileOutputStream(System.getProperty("user.dir") + "\\" + "that.txt");
+            if (fileName == null) return;
+            String extension = fileName.substring(fileName.lastIndexOf("."));
+            String nameWithoutExtension = fileName.substring(0, fileName.lastIndexOf("."));
+            String myDir = System.getProperty("user.dir");
+            File file = new File(myDir, fileName);
+            for (int num = 1; file.exists(); num++) {
+                file = new File(myDir, nameWithoutExtension + "(" + num + ")" + "." + extension);
+            }
+            FileOutputStream fileOut = new FileOutputStream(file);
             for (String filePart : fileParts) {
                 byte[] result = Base64.getDecoder().decode(filePart);
                 fileOut.write(result);
             }
+            fileName = null;
         } catch (FileNotFoundException e) {
             System.out.println("Find not found!");
         } catch (IOException e) {

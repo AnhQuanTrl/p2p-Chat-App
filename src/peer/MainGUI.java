@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 
 public class MainGUI implements Runnable {
     private JFrame frame;
@@ -12,7 +13,7 @@ public class MainGUI implements Runnable {
     public void run() {
         frame = new JFrame("New Chat Session");
         frame.setBounds(100, 100, 450, 300);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel panel = new JPanel();
         frame.getContentPane().add(panel, BorderLayout.CENTER);
@@ -55,6 +56,7 @@ public class MainGUI implements Runnable {
         }
         int port = Integer.parseInt(text);
         SwingUtilities.invokeLater(new ConnectGUI(port));
-        frame.setVisible(false);
+        frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+
     }
 }

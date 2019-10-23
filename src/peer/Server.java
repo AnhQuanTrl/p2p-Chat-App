@@ -20,7 +20,8 @@ public class Server extends SwingWorker<Void, Void> {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                 PrintWriter writer = new PrintWriter(out, true);
                 String firstMessage = reader.readLine();
-                if (firstMessage.equals("/REQUEST-SESSION")) {
+                String[] args = firstMessage.split(" ");
+                if (args[0].equals("/REQUEST-SESSION")) {
                     int dialogResult = JOptionPane.showConfirmDialog(null, "accept incoming message", "incoming message",JOptionPane.YES_NO_OPTION);
                     if (dialogResult == JOptionPane.YES_OPTION) {
                         writer.println("/ACCEPT-SESSION");
