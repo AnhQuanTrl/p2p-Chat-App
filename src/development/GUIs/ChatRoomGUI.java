@@ -30,6 +30,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import javax.swing.JScrollPane;
 
 public class ChatRoomGUI {
 
@@ -87,16 +88,15 @@ public class ChatRoomGUI {
 		sl_panel.putConstraint(SpringLayout.EAST, panel_1, 705, SpringLayout.WEST, panel);
 		panel_1.setBorder(new TitledBorder(null, "Chat Room", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.add(panel_1);
-		SpringLayout sl_panel_1 = new SpringLayout();
-		panel_1.setLayout(sl_panel_1);
+		panel_1.setLayout(null);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 20, 675, 319);
+		panel_1.add(scrollPane);
 		
 		JTextArea txtChat = new JTextArea();
-		sl_panel_1.putConstraint(SpringLayout.NORTH, txtChat, 0, SpringLayout.NORTH, panel_1);
-		sl_panel_1.putConstraint(SpringLayout.WEST, txtChat, 10, SpringLayout.WEST, panel_1);
-		sl_panel_1.putConstraint(SpringLayout.SOUTH, txtChat, 321, SpringLayout.NORTH, panel_1);
-		sl_panel_1.putConstraint(SpringLayout.EAST, txtChat, -6, SpringLayout.EAST, panel_1);
-		panel_1.add(txtChat);
-		txtChat.setEditable(false);
+		txtChat.setLineWrap(true);
+		scrollPane.setViewportView(txtChat);
 		
 		JLabel lblChosenFile = new JLabel("Chosen File");
 		lblChosenFile.setFont(new Font("Tahoma", Font.PLAIN, 17));
@@ -163,22 +163,18 @@ public class ChatRoomGUI {
 		sl_panel.putConstraint(SpringLayout.EAST, panel_2, 705, SpringLayout.WEST, panel);
 		panel_2.setBorder(new TitledBorder(null, "Say Something", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.add(panel_2);
-		SpringLayout sl_panel_2 = new SpringLayout();
-		panel_2.setLayout(sl_panel_2);
-		
-		textField = new JTextField();
-		sl_panel_2.putConstraint(SpringLayout.NORTH, textField, 0, SpringLayout.NORTH, panel_2);
-		sl_panel_2.putConstraint(SpringLayout.WEST, textField, 7, SpringLayout.WEST, panel_2);
-		sl_panel_2.putConstraint(SpringLayout.SOUTH, textField, -5, SpringLayout.SOUTH, panel_2);
-		sl_panel_2.putConstraint(SpringLayout.EAST, textField, -6, SpringLayout.EAST, panel_2);
-		panel_2.add(textField);
-		textField.setColumns(10);
 		
 		JLabel lblFileName = new JLabel("");
 		sl_panel.putConstraint(SpringLayout.NORTH, lblFileName, 430, SpringLayout.NORTH, panel);
 		sl_panel.putConstraint(SpringLayout.WEST, lblFileName, 21, SpringLayout.WEST, panel);
 		lblFileName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panel.add(lblFileName);
+		panel_2.setLayout(null);
+		
+		textField = new JTextField();
+		textField.setBounds(10, 17, 673, 65);
+		panel_2.add(textField);
+		textField.setColumns(10);
 		
 	}
 }
