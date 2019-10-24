@@ -22,6 +22,13 @@ public class PeerSelectionGUI implements Runnable {
     private JFrame frame;
     private JTextField txtHost;
     private JTextField txtPort;
+    private FetchWorker fetchWorker = null;
+    public PeerSelectionGUI(String username) {
+        this.username = username;
+    }
+
+    private String username;
+
 
     @Override
     public void run() {
@@ -86,7 +93,7 @@ public class PeerSelectionGUI implements Runnable {
         Socket socket = null;
         try {
             socket = new Socket("192.168.100.103", 7000);
-            FetchWorker fetchWorker = new FetchWorker(socket, frame);
+            fetchWorker = new FetchWorker(socket, frame, username);
             fetchWorker.execute();
             fetchWorker.addActionListeners(new ActionListener() {
                 @Override
@@ -94,14 +101,23 @@ public class PeerSelectionGUI implements Runnable {
                     listModel.clear();
                     String[] users = e.getActionCommand().split(" ");
                     for (String user : users) {
-                        listModel.addElement(user);
-
+                        String[] args = user.split(",");
+                        if (!args[0].equals(username)) {
+                            listModel.addElement(user);
+                        }
                     }
                 }
             });
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        btnLogOut.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (fetchWorker != null) fetchWorker.setCancel(true);
+            }
+        });
     }
 }
 //        frame = new JFrame("Connect");

@@ -15,12 +15,19 @@ import java.util.concurrent.ExecutionException;
 
 public class FetchWorker extends SwingWorker<Boolean, String> {
     private Socket socket;
+    private String username;
+    public void setCancel(Boolean cancel) {
+        isCancel = cancel;
+    }
+
+    private Boolean isCancel = false;
     private List<ActionListener> actionListeners;
     private JFrame frame;
-    public FetchWorker(Socket socket, JFrame frame) {
+    public FetchWorker(Socket socket, JFrame frame, String username) {
         this.socket = socket;
         this.frame = frame;
         actionListeners = new ArrayList<>(25);
+        this.username = username;
     }
     public void addActionListeners(ActionListener listener) {
         actionListeners.add(listener);
@@ -30,14 +37,21 @@ public class FetchWorker extends SwingWorker<Boolean, String> {
         try (InputStream input = socket.getInputStream(); OutputStream out = socket.getOutputStream()) {
             PrintWriter writer = new PrintWriter(out, true);
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-            while (!isCancelled()) {
+            while (!isCancel) {
                 writer.println("/FETCH");
                 String res = reader.readLine();
                 publish(res);
                 Thread.sleep(3000);
             }
+            writer.println("/LOGOUT " + username);
+            socket.close();
         }
         return null;
+    }
+
+    @Override
+    protected void done() {
+
     }
 
     @Override

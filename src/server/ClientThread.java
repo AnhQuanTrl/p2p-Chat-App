@@ -79,6 +79,9 @@ public class ClientThread extends Thread{
                     case "/FETCH":
                         writer.println(server.printAllUser());
                         break;
+                    case "/LOGOUT":
+                        exit = true;
+                        server.loginUser.remove(args[1]);
                     case "/EXIT":
                         exit = true;
                         break;
