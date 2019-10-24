@@ -81,10 +81,12 @@ public class ServerLogin {
         return !this.users.isEmpty();
     }
 
-    String printAllUser() {
+    String printAllUser(String excludeUser) {
         StringBuilder message = new StringBuilder("/UNFETCH ");
         for (Map.Entry<String, InetAddress> entry : loginUser.entrySet()) {
-            message.append(entry.getKey()).append(",").append(entry.getValue()).append(" ");
+            if (!entry.getKey().equals(excludeUser)) {
+                message.append(entry.getKey()).append(",").append(entry.getValue()).append(" ");
+            }
         }
         return message.toString();
     }

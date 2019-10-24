@@ -38,13 +38,12 @@ public class FetchWorker extends SwingWorker<Boolean, String> {
             PrintWriter writer = new PrintWriter(out, true);
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
             while (!isCancel) {
-                writer.println("/FETCH");
+                writer.println("/FETCH " + username);
                 String res = reader.readLine();
                 publish(res);
                 Thread.sleep(3000);
             }
             writer.println("/LOGOUT " + username);
-            socket.close();
         }
         return null;
     }

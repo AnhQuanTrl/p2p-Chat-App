@@ -2,6 +2,7 @@ package server;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Set;
@@ -77,11 +78,13 @@ public class ClientThread extends Thread{
                         }
                         break;
                     case "/FETCH":
-                        writer.println(server.printAllUser());
+                        username = args[1];
+                        writer.println(server.printAllUser(username));
                         break;
                     case "/LOGOUT":
                         exit = true;
                         server.loginUser.remove(args[1]);
+                        break;
                     case "/EXIT":
                         exit = true;
                         break;
@@ -93,8 +96,13 @@ public class ClientThread extends Thread{
             socket.close();
 
         } catch (IOException ex) {
-            System.out.println("Error in UserThread: " + ex.getMessage());
-            ex.printStackTrace();
+            server.removeUser(this);
+            server.loginUser.remove(username);
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

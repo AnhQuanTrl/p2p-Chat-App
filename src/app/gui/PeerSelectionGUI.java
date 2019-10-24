@@ -9,13 +9,11 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.concurrent.ExecutionException;
 
 public class PeerSelectionGUI implements Runnable {
 
@@ -36,7 +34,19 @@ public class PeerSelectionGUI implements Runnable {
         frame.setTitle("Peer Selection");
         frame.setBounds(100, 100, 320, 492);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (fetchWorker != null) fetchWorker.setCancel(true);
+                try {
+                    fetchWorker.get();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                } catch (ExecutionException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
         JPanel panel = new JPanel();
         frame.getContentPane().add(panel, BorderLayout.CENTER);
         panel.setLayout(null);
@@ -101,10 +111,7 @@ public class PeerSelectionGUI implements Runnable {
                     listModel.clear();
                     String[] users = e.getActionCommand().split(" ");
                     for (String user : users) {
-                        String[] args = user.split(",");
-                        if (!args[0].equals(username)) {
-                            listModel.addElement(user);
-                        }
+                        listModel.addElement(user);
                     }
                 }
             });
@@ -116,6 +123,7 @@ public class PeerSelectionGUI implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (fetchWorker != null) fetchWorker.setCancel(true);
+
             }
         });
     }
