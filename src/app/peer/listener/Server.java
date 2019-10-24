@@ -33,7 +33,7 @@ public class Server extends SwingWorker<Void, Void> {
                 String firstMessage = reader.readLine();
                 String[] args = firstMessage.split(" ");
                 if (args[0].equals("/REQUEST-SESSION")) {
-                    int dialogResult = JOptionPane.showConfirmDialog(null, "accept incoming message", "incoming message",JOptionPane.YES_NO_OPTION);
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "accept incoming message from " + args[1], "incoming message",JOptionPane.YES_NO_OPTION);
                     if (dialogResult == JOptionPane.YES_OPTION) {
                         writer.println("/ACCEPT-SESSION");
                         SwingUtilities.invokeLater(new ChatSessionGUI(socket, false));

@@ -2,6 +2,7 @@ package app.gui;
 
 import app.peer.listener.Server;
 import app.servercomm.FetchWorker;
+import app.utility.UserIP;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -22,11 +23,9 @@ public class PeerSelectionGUI implements Runnable {
     private JTextField txtHost;
     private JTextField txtPort;
     private FetchWorker fetchWorker = null;
-    public PeerSelectionGUI(String username) {
-        this.username = username;
+    public PeerSelectionGUI() {
     }
 
-    private String username;
 
 
     @Override
@@ -89,14 +88,16 @@ public class PeerSelectionGUI implements Runnable {
         list.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                JList list = (JList) e.getSource();
-                int index = list.locationToIndex(e.getPoint());
-                String user = listModel.get(index);
-                String[] args = user.split(",");
-                Socket socket = null;
                 try {
-                    socket = new Socket(args[1], 8989);
-                    SwingUtilities.invokeLater(new ChatSessionGUI(socket));
+                    if (e.getClickCount() == 2) {
+                        JList list = (JList) e.getSource();
+                        int index = list.locationToIndex(e.getPoint());
+                        String user = listModel.get(index);
+                        String[] args = user.split(",");
+                        Socket socket = null;
+                        socket = new Socket(args[1].substring(1), 8989);
+                        SwingUtilities.invokeLater(new ChatSessionGUI(socket));
+                    }
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -106,7 +107,7 @@ public class PeerSelectionGUI implements Runnable {
         Socket socket = null;
         try {
             socket = new Socket("192.168.100.103", 7000);
-            fetchWorker = new FetchWorker(socket, frame, username);
+            fetchWorker = new FetchWorker(socket, frame);
             fetchWorker.execute();
             fetchWorker.addActionListeners(new ActionListener() {
                 @Override
@@ -115,6 +116,10 @@ public class PeerSelectionGUI implements Runnable {
                     String[] users = e.getActionCommand().split(" ");
                     for (String user : users) {
                         listModel.addElement(user);
+//                        for (String user : users) {
+////                            String[] args = user.split(",");
+////                            listModel.addElement(new UserIP());
+//                        }
                     }
                 }
             });

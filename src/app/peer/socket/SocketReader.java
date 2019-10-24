@@ -85,7 +85,7 @@ public class SocketReader extends SwingWorker<Void, String> {
                             assembleFile();
                             break;
                         case "/MESSAGE":
-                            publish(args[1]);
+                            publish(serverInput.substring(serverInput.indexOf(" ")));
                             break;
                     }
                     System.out.println(fileParts);

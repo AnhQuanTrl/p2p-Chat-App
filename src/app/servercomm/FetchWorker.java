@@ -2,6 +2,7 @@ package app.servercomm;
 
 
 import app.gui.PeerSelectionGUI;
+import app.utility.Metadata;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -15,7 +16,6 @@ import java.util.concurrent.ExecutionException;
 
 public class FetchWorker extends SwingWorker<Boolean, String> {
     private Socket socket;
-    private String username;
     public void setCancel(Boolean cancel) {
         isCancel = cancel;
     }
@@ -23,11 +23,10 @@ public class FetchWorker extends SwingWorker<Boolean, String> {
     private Boolean isCancel = false;
     private List<ActionListener> actionListeners;
     private JFrame frame;
-    public FetchWorker(Socket socket, JFrame frame, String username) {
+    public FetchWorker(Socket socket, JFrame frame) {
         this.socket = socket;
         this.frame = frame;
         actionListeners = new ArrayList<>(25);
-        this.username = username;
     }
     public void addActionListeners(ActionListener listener) {
         actionListeners.add(listener);
@@ -38,12 +37,13 @@ public class FetchWorker extends SwingWorker<Boolean, String> {
             PrintWriter writer = new PrintWriter(out, true);
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
             while (!isCancel) {
-                writer.println("/FETCH " + username);
+                writer.println("/FETCH " + Metadata.getInstance().getUsername());
                 String res = reader.readLine();
                 publish(res);
                 Thread.sleep(3000);
             }
-            writer.println("/LOGOUT " + username);
+            writer.println("/LOGOUT " + Metadata.getInstance().getUsername());
+            Metadata.getInstance().setUsername("");
         }
         return null;
     }

@@ -3,9 +3,14 @@ package app.gui;
 import app.peer.file.SocketFileWriter;
 import app.peer.socket.SocketReader;
 import app.peer.socket.SocketWriter;
+import app.utility.Metadata;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -17,7 +22,6 @@ import java.net.Socket;
 public class ChatSessionGUI implements Runnable {
     private JFrame frame;
     private File file;
-    String user;
     private JTextArea textArea;
     private JTextField textField;
     private SocketWriter writer;
@@ -66,16 +70,14 @@ public class ChatSessionGUI implements Runnable {
         sl_panel.putConstraint(SpringLayout.EAST, panel_1, 705, SpringLayout.WEST, panel);
         panel_1.setBorder(new TitledBorder(null, "Chat Room", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panel.add(panel_1);
-        SpringLayout sl_panel_1 = new SpringLayout();
-        panel_1.setLayout(sl_panel_1);
+        panel_1.setLayout(null);
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(10, 20, 675, 319);
+        panel_1.add(scrollPane);
 
-        JTextArea txtChat = new JTextArea();
-        sl_panel_1.putConstraint(SpringLayout.NORTH, txtChat, 0, SpringLayout.NORTH, panel_1);
-        sl_panel_1.putConstraint(SpringLayout.WEST, txtChat, 10, SpringLayout.WEST, panel_1);
-        sl_panel_1.putConstraint(SpringLayout.SOUTH, txtChat, 321, SpringLayout.NORTH, panel_1);
-        sl_panel_1.putConstraint(SpringLayout.EAST, txtChat, -6, SpringLayout.EAST, panel_1);
-        panel_1.add(txtChat);
+        JTextPane txtChat = new JTextPane();
         txtChat.setEditable(false);
+        scrollPane.setViewportView(txtChat);
 
         JLabel lblChosenFile = new JLabel("Chosen File");
         lblChosenFile.setFont(new Font("Tahoma", Font.PLAIN, 17));
@@ -177,11 +179,24 @@ public class ChatSessionGUI implements Runnable {
         textField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 writer.write("/MESSAGE " + textField.getText());
-                txtChat.append(textField.getText());
-                txtChat.append("\n");
-                txtChat.setCaretPosition(txtChat.getDocument().getLength());
-                textField.setText("");
+                try {
+                    StyledDocument doc = txtChat.getStyledDocument();
+
+                    SimpleAttributeSet left = new SimpleAttributeSet();
+                    StyleConstants.setAlignment(left, StyleConstants.ALIGN_LEFT);
+                    StyleConstants.setForeground(left, Color.RED);
+
+                    SimpleAttributeSet right = new SimpleAttributeSet();
+                    StyleConstants.setAlignment(right, StyleConstants.ALIGN_RIGHT);
+                    StyleConstants.setForeground(right, Color.BLUE);
+                    doc.insertString(doc.getLength(), textField.getText()+'\n', right );
+                    doc.setParagraphAttributes(doc.getLength(), 1, right, false);
+                    textField.setText("");
+                } catch (BadLocationException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
         JLabel lblFileName = new JLabel("");
@@ -192,15 +207,28 @@ public class ChatSessionGUI implements Runnable {
         frame.setVisible(true);
         writer = new SocketWriter(socket);
         writer.execute();
-        if (initiate) writer.write("/REQUEST-SESSION " + user);
+        if (initiate) writer.write("/REQUEST-SESSION " + Metadata.getInstance().getUsername());
         reader = new SocketReader(socket, frame, writer);
         reader.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                StyledDocument doc = txtChat.getStyledDocument();
+
+                SimpleAttributeSet left = new SimpleAttributeSet();
+                StyleConstants.setAlignment(left, StyleConstants.ALIGN_LEFT);
+                StyleConstants.setForeground(left, Color.RED);
+
+                SimpleAttributeSet right = new SimpleAttributeSet();
+                StyleConstants.setAlignment(right, StyleConstants.ALIGN_RIGHT);
+                StyleConstants.setForeground(right, Color.BLUE);
                 String text = e.getActionCommand();
                 System.out.println(text);
-                txtChat.append(text);
-                txtChat.append("\n");
+                try {
+                    doc.insertString(doc.getLength(), text + "\n", left );
+                } catch (BadLocationException ex) {
+                    ex.printStackTrace();
+                }
+                doc.setParagraphAttributes(doc.getLength(), 1, left, false);
                 txtChat.setCaretPosition(txtChat.getDocument().getLength());
             }
         });

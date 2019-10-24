@@ -2,6 +2,7 @@ package app.servercomm;
 
 import app.gui.PeerSelectionGUI;
 import app.peer.listener.Server;
+import app.utility.Metadata;
 
 import javax.swing.*;
 import java.awt.event.WindowEvent;
@@ -29,6 +30,7 @@ public class LogInWorker extends SwingWorker<Boolean, Void> {
             writer.println("/LOGIN " + username + " " + password);
             String res = reader.readLine();
             if (res.equals("/ACCEPT-LOGIN")) {
+                Metadata.getInstance().setUsername(username);
                 writer.println("/EXIT");
                 return true;
             }
@@ -44,7 +46,7 @@ public class LogInWorker extends SwingWorker<Boolean, Void> {
                 JOptionPane.showMessageDialog(frame, "Login Successfully");
                 frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 
-                SwingUtilities.invokeLater(new PeerSelectionGUI(username));
+                SwingUtilities.invokeLater(new PeerSelectionGUI());
             } else {
                 JOptionPane.showMessageDialog(frame, "Login Failed");
             }
