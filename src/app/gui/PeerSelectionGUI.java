@@ -2,7 +2,9 @@ package app.gui;
 
 import app.peer.listener.Server;
 import app.servercomm.FetchWorker;
+import app.utility.Metadata;
 import app.utility.UserIP;
+import com.sun.xml.internal.ws.api.wsdl.parser.MetaDataResolver;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -25,8 +27,6 @@ public class PeerSelectionGUI implements Runnable {
     private FetchWorker fetchWorker = null;
     public PeerSelectionGUI() {
     }
-
-
 
     @Override
     public void run() {
@@ -94,9 +94,11 @@ public class PeerSelectionGUI implements Runnable {
                         int index = list.locationToIndex(e.getPoint());
                         String user = listModel.get(index);
                         String[] args = user.split(",");
-                        Socket socket = null;
-                        socket = new Socket(args[1].substring(1), 8989);
-                        SwingUtilities.invokeLater(new ChatSessionGUI(socket));
+                        if (!Metadata.getInstance().containUser(args[0])) {
+                            Socket socket = null;
+                            socket = new Socket(args[1].substring(1), 8989);
+                            SwingUtilities.invokeLater(new ChatSessionGUI(socket, args[0]));
+                        }
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();

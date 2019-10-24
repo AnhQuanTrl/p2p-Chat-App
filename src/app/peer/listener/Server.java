@@ -1,6 +1,7 @@
 package app.peer.listener;
 
 import app.gui.ChatSessionGUI;
+import app.utility.Metadata;
 
 import javax.swing.*;
 import java.io.*;
@@ -36,7 +37,7 @@ public class Server extends SwingWorker<Void, Void> {
                     int dialogResult = JOptionPane.showConfirmDialog(null, "accept incoming message from " + args[1], "incoming message",JOptionPane.YES_NO_OPTION);
                     if (dialogResult == JOptionPane.YES_OPTION) {
                         writer.println("/ACCEPT-SESSION");
-                        SwingUtilities.invokeLater(new ChatSessionGUI(socket, false));
+                        SwingUtilities.invokeLater(new ChatSessionGUI(socket, args[1], false));
                     } else {
                         writer.println("/DENY-SESSION");
                         socket.close();

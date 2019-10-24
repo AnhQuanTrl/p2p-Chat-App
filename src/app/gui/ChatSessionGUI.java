@@ -22,20 +22,22 @@ import java.net.Socket;
 public class ChatSessionGUI implements Runnable {
     private JFrame frame;
     private File file;
-    private JTextArea textArea;
+    private String username;
     private JTextField textField;
     private SocketWriter writer;
     private SocketReader reader;
     private Boolean initiate;
     private Boolean fileInProgress = false;
 
-    public ChatSessionGUI(Socket socket, Boolean initiate) {
+    public ChatSessionGUI(Socket socket, String username, Boolean initiate) {
         this.socket = socket;
         this.initiate = initiate;
+        this.username = username;
+
     }
 
-    public ChatSessionGUI(Socket socket) {
-        this(socket, true);
+    public ChatSessionGUI(Socket socket, String username) {
+        this(socket, username, true);
     }
 
     private Socket socket;
@@ -49,6 +51,7 @@ public class ChatSessionGUI implements Runnable {
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                Metadata.getInstance().removeConnectedUser(username);
                 disconnect();
             }
         });
@@ -191,8 +194,9 @@ public class ChatSessionGUI implements Runnable {
                     SimpleAttributeSet right = new SimpleAttributeSet();
                     StyleConstants.setAlignment(right, StyleConstants.ALIGN_RIGHT);
                     StyleConstants.setForeground(right, Color.BLUE);
-                    doc.insertString(doc.getLength(), textField.getText()+'\n', right );
+                    doc.insertString(doc.getLength(), textField.getText(), right );
                     doc.setParagraphAttributes(doc.getLength(), 1, right, false);
+                    doc.insertString(doc.getLength(), "\n", right);
                     textField.setText("");
                 } catch (BadLocationException ex) {
                     ex.printStackTrace();
@@ -205,6 +209,9 @@ public class ChatSessionGUI implements Runnable {
         lblFileName.setFont(new Font("Tahoma", Font.PLAIN, 15));
         panel.add(lblFileName);
         frame.setVisible(true);
+
+        Metadata.getInstance().addConnectedUser(username, frame);
+
         writer = new SocketWriter(socket);
         writer.execute();
         if (initiate) writer.write("/REQUEST-SESSION " + Metadata.getInstance().getUsername());
@@ -224,7 +231,9 @@ public class ChatSessionGUI implements Runnable {
                 String text = e.getActionCommand();
                 System.out.println(text);
                 try {
-                    doc.insertString(doc.getLength(), text + "\n", left );
+                    doc.insertString(doc.getLength(), text, left );
+                    doc.setParagraphAttributes(doc.getLength(), 1, left, false);
+                    doc.insertString(doc.getLength(), "\n", left);
                 } catch (BadLocationException ex) {
                     ex.printStackTrace();
                 }

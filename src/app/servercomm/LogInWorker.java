@@ -45,7 +45,7 @@ public class LogInWorker extends SwingWorker<Boolean, Void> {
             if (result) {
                 JOptionPane.showMessageDialog(frame, "Login Successfully");
                 frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-
+                Metadata.getInstance().setUsername("");
                 SwingUtilities.invokeLater(new PeerSelectionGUI());
             } else {
                 JOptionPane.showMessageDialog(frame, "Login Failed");
