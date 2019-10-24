@@ -1,4 +1,4 @@
-package peer;
+package app.gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
-public class MainGUI implements Runnable {
+public class MainGUI implements  Runnable{
     private JFrame frame;
     private JTextField txtPort;
     @Override
@@ -55,7 +55,7 @@ public class MainGUI implements Runnable {
             return;
         }
         int port = Integer.parseInt(text);
-        SwingUtilities.invokeLater(new ConnectGUI(port));
+        SwingUtilities.invokeLater(new PeerSelectionGUI(port));
         frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 
     }

@@ -1,60 +1,39 @@
+package app.gui;
+
+import app.servercomm.RegisterWorker;
+
 import java.awt.EventQueue;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.BorderLayout;
-import javax.swing.SpringLayout;
 import javax.swing.border.TitledBorder;
 import java.awt.Font;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
-import javax.swing.JButton;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.net.Socket;
 
-public class RegisterGUI {
+public class RegisterGUI implements Runnable{
 
-	private JFrame frmRegister;
+	private JFrame frame;
 	private JTextField textField;
 	private JPasswordField passwordField;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RegisterGUI window = new RegisterGUI();
-					window.frmRegister.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	@Override
+	public void run() {
+		frame = new JFrame();
+		frame.setTitle("Register");
+		frame.setBounds(100, 100, 421, 192);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-	/**
-	 * Create the application.
-	 */
-	public RegisterGUI() {
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		frmRegister = new JFrame();
-		frmRegister.setTitle("Register");
-		frmRegister.setBounds(100, 100, 421, 192);
-		frmRegister.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
 		JPanel panel = new JPanel();
 		panel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		frmRegister.getContentPane().add(panel, BorderLayout.CENTER);
+		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		SpringLayout sl_panel = new SpringLayout();
 		panel.setLayout(sl_panel);
-		
+
 		JPanel panel_1 = new JPanel();
 		sl_panel.putConstraint(SpringLayout.SOUTH, panel_1, 145, SpringLayout.NORTH, panel);
 		sl_panel.putConstraint(SpringLayout.EAST, panel_1, 397, SpringLayout.WEST, panel);
@@ -63,30 +42,47 @@ public class RegisterGUI {
 		sl_panel.putConstraint(SpringLayout.WEST, panel_1, 10, SpringLayout.WEST, panel);
 		panel.add(panel_1);
 		panel_1.setLayout(null);
-		
+
 		JLabel lblUsername = new JLabel("Username");
 		lblUsername.setBounds(16, 25, 80, 20);
 		lblUsername.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panel_1.add(lblUsername);
-		
+
 		textField = new JTextField();
 		textField.setBounds(102, 23, 269, 25);
 		textField.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panel_1.add(textField);
 		textField.setColumns(10);
-		
+
 		JLabel lblPassword = new JLabel("Password");
 		lblPassword.setBounds(16, 58, 62, 19);
 		lblPassword.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panel_1.add(lblPassword);
-		
+
 		passwordField = new JPasswordField();
 		passwordField.setBounds(102, 57, 269, 25);
 		panel_1.add(passwordField);
-		
+
 		JButton btnRegister = new JButton("Register");
 		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnRegister.setBounds(147, 92, 99, 34);
 		panel_1.add(btnRegister);
+		btnRegister.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Socket socket = null;
+				try {
+					socket = new Socket("localhost", 7000);
+					String password = new String(passwordField.getPassword()); //nguy hiem
+					String username = textField.getText();
+					RegisterWorker registerWorker = new RegisterWorker(socket, username, password, frame);
+					registerWorker.execute();
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+
+			}
+		});
+		frame.setVisible(true);
 	}
 }

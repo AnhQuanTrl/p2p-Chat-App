@@ -1,5 +1,7 @@
-package peer;
+package app.peer.file;
 
+
+import app.peer.socket.SocketWriter;
 
 import javax.swing.*;
 import java.io.File;

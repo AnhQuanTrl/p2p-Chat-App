@@ -1,4 +1,8 @@
-package peer;
+package app.gui;
+
+import app.peer.file.SocketFileWriter;
+import app.peer.socket.SocketReader;
+import app.peer.socket.SocketWriter;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -9,9 +13,8 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.concurrent.ExecutionException;
 
-public class SessionGUI implements Runnable {
+public class ChatSessionGUI implements Runnable {
     private JFrame frame;
     private File file;
     String user;
@@ -22,12 +25,12 @@ public class SessionGUI implements Runnable {
     private Boolean initiate;
     private Boolean fileInProgress = false;
 
-    public SessionGUI(Socket socket, Boolean initiate) {
+    public ChatSessionGUI(Socket socket, Boolean initiate) {
         this.socket = socket;
         this.initiate = initiate;
     }
 
-    public SessionGUI(Socket socket) {
+    public ChatSessionGUI(Socket socket) {
         this(socket, true);
     }
 

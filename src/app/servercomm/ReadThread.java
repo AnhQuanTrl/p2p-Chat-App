@@ -1,4 +1,4 @@
-package Client;
+package app.servercomm;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,11 +9,15 @@ import java.net.Socket;
 public class ReadThread extends Thread {
     private BufferedReader reader;
     private Socket socket;
-    private ClientLogIn client;
+    private String username;
+    private String password;
+    private String loginResult;
 
-    public ReadThread(Socket socket, ClientLogIn client) {
+    public ReadThread(Socket socket, String username, String password) {
         this.socket = socket;
-        this.client = client;
+        this.username = username;
+        this.password = password;
+
 
         try {
             InputStream input = socket.getInputStream();
@@ -29,14 +33,10 @@ public class ReadThread extends Thread {
         while (true) {
             try {
                 String response = reader.readLine();
-                System.out.println("\n" + response);
-                if (response.equals("Login Success!")){
-                    client.setLoginStatus(true);
+                if (response.equals("/ACCEPT-LOGIN")){
+
                 }
-                // prints the username after displaying the server's message
-                if (client.getUserName() != null && client.getLoginStatus() ) {
-                        System.out.print("[" + client.getUserName() + "]: ");
-                }
+
             } catch (IOException ex) {
                 System.out.println("Error reading from server: " + ex.getMessage());
                 ex.printStackTrace();
