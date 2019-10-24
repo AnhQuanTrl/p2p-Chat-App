@@ -70,7 +70,7 @@ public class LoginGUI implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 try {
                     Socket socket = new Socket();
-                    socket.connect(new InetSocketAddress("192.168.1.167", 7000), 2000);
+                    socket.connect(new InetSocketAddress("192.168.1.158", 7000), 2000);
                     String username = textUsername.getText();
                     String password = new String(passwordField.getPassword());
                     LogInWorker logInWorker = new LogInWorker(socket, username, password, frame);

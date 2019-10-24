@@ -96,7 +96,7 @@ public class ServerLogin {
     String printAllFriends(String username) {
         File file= new File(System.getProperty("user.dir"), "user.csv");
         StringBuilder message = new StringBuilder("/UNFETCH ");
-        String[] friends = null;
+        List<String> friends = new ArrayList<>();
         try {
             if (!file.exists()) {
                 file.createNewFile();
@@ -105,8 +105,10 @@ public class ServerLogin {
             String row;
             while ((row = fileReader.readLine()) != null) {
                 String[] userField = row.split(",");
+                System.out.println(row);
                 if (userField[0].equals(username) && userField.length >= 3) {
-                    friends = userField[2].split(",");
+                    List<String> clist = Arrays.asList(userField);
+                    friends = clist.subList(2, clist.size());
                     break;
                 }
             }
@@ -123,6 +125,7 @@ public class ServerLogin {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println(message.toString());
         return message.toString();
     }
     Boolean addFriendIfAlreadyExist(String source, String target) {
@@ -155,6 +158,7 @@ public class ServerLogin {
                 fileWriter.write(element);
                 fileWriter.write("\n");
             }
+            fileWriter.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

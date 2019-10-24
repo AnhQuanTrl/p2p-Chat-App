@@ -31,7 +31,7 @@ public class PeerSelectionGUI implements Runnable {
         server.execute();
         frame = new JFrame();
         frame.setTitle("Peer Selection");
-        frame.setBounds(100, 100, 677, 492);
+        frame.setBounds(100, 100, 325, 580);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -47,17 +47,25 @@ public class PeerSelectionGUI implements Runnable {
         panel_1.setBounds(10, 10, 286, 347);
         panel_1.setBorder(new TitledBorder(null, "Choose A Person To Connect", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panel.add(panel_1);
+
+         panel_1.setLayout(null);
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(6, 15, 266, 317);
+        panel_1.add(scrollPane);
         DefaultListModel<String> listModel = new DefaultListModel<>();
         JList list = new JList(listModel);
+        scrollPane.setViewportView(list);
         list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         list.setFont(new Font("Tahoma", Font.PLAIN, 13));
+//        sl_panel_1.putConstraint(SpringLayout.NORTH, list, 10, SpringLayout.NORTH, panel_1);
+//        sl_panel_1.putConstraint(SpringLayout.WEST, list, 10, SpringLayout.WEST, panel_1);
+//        sl_panel_1.putConstraint(SpringLayout.SOUTH, list, 311, SpringLayout.NORTH, panel_1);
+//        sl_panel_1.putConstraint(SpringLayout.EAST, list, -6, SpringLayout.EAST, panel_1);
         list.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-        panel_1.add(list);
-        panel_1.setLayout(null);
-
         JPanel panel_2 = new JPanel();
         panel_2.setBorder(new TitledBorder(null, "Log Out", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        panel_2.setBounds(10, 368, 286, 76);
+        panel_2.setBounds(10, 453, 286, 76);
+
         panel.add(panel_2);
         SpringLayout sl_panel_2 = new SpringLayout();
         panel_2.setLayout(sl_panel_2);
@@ -69,35 +77,15 @@ public class PeerSelectionGUI implements Runnable {
         sl_panel_2.putConstraint(SpringLayout.EAST, btnLogOut, -12, SpringLayout.EAST, panel_2);
         btnLogOut.setFont(new Font("Tahoma", Font.PLAIN, 18));
         panel_2.add(btnLogOut);
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(10, 20, 266, 317);
-        panel_1.add(scrollPane);
-        DefaultListModel<String> searchListModel = new DefaultListModel<>();
-        JList searchList = new JList(searchListModel);
-        scrollPane.setViewportView(searchList);
-        searchList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        searchList.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        searchList.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
         JPanel panel_3 = new JPanel();
         panel_3.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Search For Someone", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-        panel_3.setBounds(300, 10, 353, 76);
+        panel_3.setBounds(10, 367, 286, 76);
         panel.add(panel_3);
         panel_3.setLayout(null);
         textField = new JTextField();
-        textField.setBounds(10, 20, 333, 46);
+        textField.setBounds(10, 20, 266, 46);
         panel_3.add(textField);
         textField.setColumns(10);
-
-        JPanel panel_4 = new JPanel();
-        panel_4.setBorder(new TitledBorder(null, "Search Result", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        panel_4.setBounds(300, 96, 353, 348);
-        panel.add(panel_4);
-        panel_4.setLayout(null);
-        JScrollPane scrollPane_1 = new JScrollPane();
-        scrollPane_1.setBounds(10, 21, 333, 317);
-        panel_4.add(scrollPane_1);
-        JTextArea listResult = new JTextArea();
-        scrollPane_1.setViewportView(listResult);
         frame.setVisible(true);
         list.addMouseListener(new MouseAdapter() {
             @Override
@@ -125,7 +113,7 @@ public class PeerSelectionGUI implements Runnable {
         });
         Socket socket = null;
         try {
-            socket = new Socket("192.168.1.167", 7000);
+            socket = new Socket("192.168.1.158", 7000);
             fetchWorker = new FetchWorker(socket, frame);
             fetchWorker.execute();
             fetchWorker.addActionListeners(new ActionListener() {
@@ -134,6 +122,7 @@ public class PeerSelectionGUI implements Runnable {
                     listModel.clear();
                     String[] users = e.getActionCommand().split(" ");
                     for (String user : users) {
+                        System.out.println(user);
                         listModel.addElement(user);
 //                        for (String user : users) {
 ////                            String[] args = user.split(",");
@@ -151,7 +140,7 @@ public class PeerSelectionGUI implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 Socket socket = null;
                 try {
-                    socket = new Socket("192.168.1.167", 7000);
+                    socket = new Socket("192.168.1.158", 7000);
                     AddFriendWorker addFriendWorker = new AddFriendWorker(socket, textField.getText(), frame);
                     addFriendWorker.execute();
                 } catch (IOException ex) {
@@ -167,7 +156,7 @@ public class PeerSelectionGUI implements Runnable {
 //                        JList list = (JList) e.getSource();
 //                        int index = list.locationToIndex(e.getPoint());
 //                        String friend = searchListModel.get(index);
-//                        Socket socket = new Socket("192.168.1.167", 7000);
+//                        Socket socket = new Socket("192.168.1.158", 7000);
 //                        AddFriendWorker addFriendWorker = new AddFriendWorker(socket, friend, frame);
 //                        addFriendWorker.execute();
 //                    }
