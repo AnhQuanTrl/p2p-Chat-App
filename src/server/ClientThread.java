@@ -79,8 +79,20 @@ public class ClientThread extends Thread{
                         break;
                     case "/FETCH":
                         username = args[1];
-                        writer.println(server.printAllUser(username));
+                        writer.println(server.printAllFriends(username));
                         break;
+                    case "/FRIEND-QUERY":
+                        String query = args[1];
+                        String message = String.join(",", server.searchUser(query));
+                        writer.println(message);
+                        break;
+                    case "/FRIEND-REQUEST":
+                        Boolean added = server.addFriendIfAlreadyExist(args[1], args[2]);
+                        if (added) {
+                            writer.println("/ACCEPT-FRIEND-REQUEST");
+                        } else {
+                            writer.println("/DENY-FRIEND-REQUEST");
+                        }
                     case "/LOGOUT":
                         exit = true;
                         server.loginUser.remove(args[1]);
@@ -88,6 +100,7 @@ public class ClientThread extends Thread{
                     case "/EXIT":
                         exit = true;
                         break;
+
                     default:
                         writer.println("ERROR: Illegal Command");
                 }

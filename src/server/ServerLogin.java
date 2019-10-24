@@ -2,10 +2,9 @@ package server;
 
 import java.io.*;
 import java.net.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ServerLogin {
     private int port;
@@ -106,16 +105,18 @@ public class ServerLogin {
             String row;
             while ((row = fileReader.readLine()) != null) {
                 String[] userField = row.split(",");
-                if (userField[0].equals(username)) {
+                if (userField[0].equals(username) && userField.length >= 3) {
                     friends = userField[2].split(",");
                     break;
                 }
             }
             fileReader.close();
-            for (String friend : friends) {
-                message.append(friend).append(",");
-                if (loginUser.get(friend) != null) message.append(loginUser.get(friend));
-                message.append(" ");
+            if (friends != null) {
+                for (String friend: friends) {
+                    message.append(friend).append(",");
+                    if (loginUser.get(friend) != null) message.append(loginUser.get(friend));
+                    message.append(" ");
+                }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -123,6 +124,47 @@ public class ServerLogin {
             e.printStackTrace();
         }
         return message.toString();
+    }
+    Boolean addFriendIfAlreadyExist(String source, String target) {
+        File file= new File(System.getProperty("user.dir"), "user.csv");
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            BufferedReader fileReader = new BufferedReader(new FileReader(file));
+            String row;
+            List<String> list = new ArrayList<>();
+            while ((row = fileReader.readLine()) != null) {
+                list.add(row);
+                String[] userField = row.split(",");
+                if (userField[0].equals(source)) {
+                    List clist = Arrays.asList(userField);
+                    List friends = clist.subList(2, clist.size());
+                    if (friends == null || !friends.contains(target)) {
+                        StringBuilder stringBuilder = new StringBuilder(row);
+                        stringBuilder.append(",").append(target);
+                        list.set(list.size() - 1, stringBuilder.toString());
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            fileReader.close();
+            FileWriter fileWriter = new FileWriter(file);
+            for (String element : list) {
+                fileWriter.write(element);
+                fileWriter.write("\n");
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    Set<String> searchUser(String query) {
+        Set<String> set = users.keySet().stream().filter(s -> s.contains(query)).collect(Collectors.toSet());
+        return set;
     }
 }
 

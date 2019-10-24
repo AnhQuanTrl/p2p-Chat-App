@@ -1,7 +1,9 @@
 package app.gui;
 
 import app.peer.preprocess.Server;
+import app.servercomm.AddFriendWorker;
 import app.servercomm.FetchWorker;
+import app.servercomm.FriendQueryWorker;
 import app.utility.Metadata;
 
 import javax.swing.*;
@@ -70,7 +72,8 @@ public class PeerSelectionGUI implements Runnable {
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBounds(10, 20, 266, 317);
         panel_1.add(scrollPane);
-        JList searchList = new JList();
+        DefaultListModel<String> searchListModel = new DefaultListModel<>();
+        JList searchList = new JList(searchListModel);
         scrollPane.setViewportView(searchList);
         searchList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         searchList.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -84,6 +87,7 @@ public class PeerSelectionGUI implements Runnable {
         textField.setBounds(10, 20, 333, 46);
         panel_3.add(textField);
         textField.setColumns(10);
+
         JPanel panel_4 = new JPanel();
         panel_4.setBorder(new TitledBorder(null, "Search Result", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panel_4.setBounds(300, 96, 353, 348);
@@ -138,10 +142,41 @@ public class PeerSelectionGUI implements Runnable {
                     }
                 }
             });
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        textField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Socket socket = null;
+                try {
+                    socket = new Socket("192.168.1.167", 7000);
+                    AddFriendWorker addFriendWorker = new AddFriendWorker(socket, textField.getText(), frame);
+                    addFriendWorker.execute();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+//        searchList.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                try {
+//                    if (e.getClickCount() == 2) {
+//                        JList list = (JList) e.getSource();
+//                        int index = list.locationToIndex(e.getPoint());
+//                        String friend = searchListModel.get(index);
+//                        Socket socket = new Socket("192.168.1.167", 7000);
+//                        AddFriendWorker addFriendWorker = new AddFriendWorker(socket, friend, frame);
+//                        addFriendWorker.execute();
+//                    }
+//                } catch (IOException ex) {
+//                    ex.printStackTrace();
+//                }
+//
+//            }
+//        });
         btnLogOut.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

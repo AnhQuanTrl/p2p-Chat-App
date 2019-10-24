@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class FetchWorker extends SwingWorker<Boolean, String> {
+public class FetchWorker extends SwingWorker<Void, String> {
     private Socket socket;
     public void setCancel(Boolean cancel) {
         isCancel = cancel;
@@ -32,7 +32,7 @@ public class FetchWorker extends SwingWorker<Boolean, String> {
         actionListeners.add(listener);
     }
     @Override
-    protected Boolean doInBackground() throws Exception {
+    protected Void doInBackground() throws Exception {
         try (InputStream input = socket.getInputStream(); OutputStream out = socket.getOutputStream()) {
             PrintWriter writer = new PrintWriter(out, true);
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
@@ -50,7 +50,11 @@ public class FetchWorker extends SwingWorker<Boolean, String> {
 
     @Override
     protected void done() {
-
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
