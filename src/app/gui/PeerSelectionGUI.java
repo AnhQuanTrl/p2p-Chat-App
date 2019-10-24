@@ -18,6 +18,7 @@ import java.util.concurrent.ExecutionException;
 public class PeerSelectionGUI implements Runnable {
 
     private JFrame frame;
+    private Server server;
     private JTextField txtHost;
     private JTextField txtPort;
     private FetchWorker fetchWorker = null;
@@ -30,6 +31,8 @@ public class PeerSelectionGUI implements Runnable {
 
     @Override
     public void run() {
+        server = new Server();
+        server.execute();
         frame = new JFrame();
         frame.setTitle("Peer Selection");
         frame.setBounds(100, 100, 320, 492);
@@ -38,13 +41,13 @@ public class PeerSelectionGUI implements Runnable {
             @Override
             public void windowClosing(WindowEvent e) {
                 if (fetchWorker != null) fetchWorker.setCancel(true);
-                try {
-                    fetchWorker.get();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                } catch (ExecutionException ex) {
-                    ex.printStackTrace();
-                }
+//                try {
+//                    fetchWorker.get();
+//                } catch (InterruptedException ex) {
+//                    ex.printStackTrace();
+//                } catch (ExecutionException ex) {
+//                    ex.printStackTrace();
+//                }
             }
         });
         JPanel panel = new JPanel();
@@ -123,7 +126,9 @@ public class PeerSelectionGUI implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (fetchWorker != null) fetchWorker.setCancel(true);
-
+                server.cancel(true);
+                SwingUtilities.invokeLater(new LoginGUI());
+                frame.dispose();
             }
         });
     }

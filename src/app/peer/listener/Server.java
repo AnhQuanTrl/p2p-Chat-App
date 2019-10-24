@@ -4,19 +4,27 @@ import app.gui.ChatSessionGUI;
 
 import javax.swing.*;
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server extends SwingWorker<Void, Void> {
     private int port = 8989;
+    private ServerSocket serverSocket;
+    public void setCancel(Boolean cancel) {
+        isCancel = cancel;
+    }
 
+    private Boolean isCancel = false;
     public Server () {
         this.port = port;
     }
     @Override
     public Void doInBackground() {
         try {
-            ServerSocket serverSocket = new ServerSocket(port);
+            serverSocket = new ServerSocket();
+            serverSocket.setReuseAddress(true);
+            serverSocket.bind(new InetSocketAddress(port));
             while (!isCancelled()) {
                 Socket socket = serverSocket.accept();
                 InputStream in = socket.getInputStream(); OutputStream out = socket.getOutputStream();
@@ -36,8 +44,17 @@ public class Server extends SwingWorker<Void, Void> {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Server restart");
         }
         return null;
+    }
+
+    @Override
+    protected void done() {
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            System.out.println("ok");
+        }
     }
 }
