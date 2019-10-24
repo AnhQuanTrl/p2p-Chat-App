@@ -65,14 +65,11 @@ public class PeerSelectionGUI implements Runnable {
         sl_panel_2.putConstraint(SpringLayout.EAST, btnLogOut, -12, SpringLayout.EAST, panel_2);
         btnLogOut.setFont(new Font("Tahoma", Font.PLAIN, 18));
         panel_2.add(btnLogOut);
-        Server server = new Server();
-        server.execute();
-        Socket socket = null;
-
+        frame.setVisible(true);
         list.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                JList list = (JList)e.getSource();
+                JList list = (JList) e.getSource();
                 int index = list.locationToIndex(e.getPoint());
                 String user = listModel.get(index);
                 String[] args = user.split(",");
@@ -86,8 +83,9 @@ public class PeerSelectionGUI implements Runnable {
 
             }
         });
+        Socket socket = null;
         try {
-            socket = new Socket("localhost", 7000);
+            socket = new Socket("192.168.100.103", 7000);
             FetchWorker fetchWorker = new FetchWorker(socket, frame);
             fetchWorker.execute();
             fetchWorker.addActionListeners(new ActionListener() {
@@ -105,7 +103,7 @@ public class PeerSelectionGUI implements Runnable {
             e.printStackTrace();
         }
     }
-
+}
 //        frame = new JFrame("Connect");
 //        frame.setBounds(100, 100, 450, 300);
 //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -155,4 +153,3 @@ public class PeerSelectionGUI implements Runnable {
 //        panel.add(btnSubmit);
 //        frame.setVisible(true);
 //
-}

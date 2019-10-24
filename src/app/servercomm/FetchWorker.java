@@ -28,7 +28,7 @@ public class FetchWorker extends SwingWorker<Boolean, String> {
     @Override
     protected Boolean doInBackground() throws Exception {
         try (InputStream input = socket.getInputStream(); OutputStream out = socket.getOutputStream()) {
-            PrintWriter writer = new PrintWriter(out);
+            PrintWriter writer = new PrintWriter(out, true);
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
             while (!isCancelled()) {
                 writer.println("/FETCH");
@@ -43,6 +43,7 @@ public class FetchWorker extends SwingWorker<Boolean, String> {
     @Override
     protected void process(List<String> chunks) {
         for (String text : chunks) {
+            text = text.substring(text.indexOf(" "));
             ActionEvent evt = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, text);
             for (ActionListener listener : actionListeners) {
                 listener.actionPerformed(evt);

@@ -1,8 +1,6 @@
 package app.gui;
 
 import app.servercomm.LogInWorker;
-import app.servercomm.ReadThread;
-import app.servercomm.WriteThread;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -70,7 +68,7 @@ public class LoginGUI implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Socket socket = new Socket("localhost", 7000);
+                    Socket socket = new Socket("192.168.100.103", 7000);
                     String username = textUsername.getText();
                     String password = new String(passwordField.getPassword());
                     LogInWorker logInWorker = new LogInWorker(socket, username, password, frame);
@@ -106,6 +104,6 @@ public class LoginGUI implements Runnable {
             }
         });
         panel_2.add(btnRegisterNow);
-
+        frame.setVisible(true);
     }
 }

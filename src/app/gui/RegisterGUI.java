@@ -72,7 +72,7 @@ public class RegisterGUI implements Runnable{
 			public void actionPerformed(ActionEvent e) {
 				Socket socket = null;
 				try {
-					socket = new Socket("localhost", 7000);
+					socket = new Socket("192.168.100.103", 7000);
 					String password = new String(passwordField.getPassword()); //nguy hiem
 					String username = textField.getText();
 					RegisterWorker registerWorker = new RegisterWorker(socket, username, password, frame);

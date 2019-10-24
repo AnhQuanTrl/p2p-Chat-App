@@ -1,9 +1,7 @@
 package server;
 
 import java.io.*;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -17,7 +15,7 @@ public class ServerLogin {
 
     public ServerLogin(int port){
         this.port = port;
-        File file= new File(System.getProperty("user.dir"), "user.scv");
+        File file= new File(System.getProperty("user.dir"), "user.csv");
         try {
             BufferedReader fileReader = new BufferedReader(new FileReader(file));
             String row;
@@ -25,6 +23,7 @@ public class ServerLogin {
                 String[] userField = row.split(",");
                 users.put(userField[0], userField[1]);
             }
+            fileReader.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -33,6 +32,13 @@ public class ServerLogin {
     }
 
     public void execute() {
+        try(final DatagramSocket socket = new DatagramSocket()){
+            socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+            String ip = socket.getLocalAddress().getHostAddress();
+            System.out.print(ip);
+        } catch (UnknownHostException | SocketException e) {
+            e.printStackTrace();
+        }
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Chat Server is listening on port " + port);
 

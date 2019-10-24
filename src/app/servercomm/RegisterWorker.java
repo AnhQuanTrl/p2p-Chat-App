@@ -22,8 +22,8 @@ public class RegisterWorker extends SwingWorker<Boolean, Void> {
 
     @Override
     protected Boolean doInBackground() throws Exception {
-        try (InputStream input = socket.getInputStream(); OutputStream out = socket.getOutputStream()) {
-            PrintWriter writer = new PrintWriter(out);
+        try {InputStream input = socket.getInputStream(); OutputStream out = socket.getOutputStream();
+            PrintWriter writer = new PrintWriter(out, true);
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
             writer.println("/SIGNUP " + username + " " + password);
             String res = reader.readLine();
@@ -31,6 +31,9 @@ public class RegisterWorker extends SwingWorker<Boolean, Void> {
                 writer.println("/EXIT");
                 return true;
             }
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return false;
     }

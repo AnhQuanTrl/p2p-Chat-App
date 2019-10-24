@@ -24,7 +24,7 @@ public class LogInWorker extends SwingWorker<Boolean, Void> {
     @Override
     protected Boolean doInBackground() throws Exception {
         try (InputStream input = socket.getInputStream(); OutputStream out = socket.getOutputStream()) {
-            PrintWriter writer = new PrintWriter(out);
+            PrintWriter writer = new PrintWriter(out, true);
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
             writer.println("/LOGIN " + username + " " + password);
             String res = reader.readLine();

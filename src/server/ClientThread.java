@@ -48,9 +48,9 @@ public class ClientThread extends Thread{
                         } else {
                             if (server.isValidUser(args[1], args[2])){
                                 writer.println("/ACCEPT-LOGIN");
-                                username = args[0];
-                                password = args[1];
-
+                                username = args[1];
+                                password = args[2];
+                                server.loginUser.put(args[1], socket.getInetAddress());
                             }
                             else{
                                 writer.println("/DENY-LOGIN");
@@ -62,9 +62,9 @@ public class ClientThread extends Thread{
                             writer.println("USAGE: /SIGNUP <username> <password>");
                         } else {
                             if (!server.users.containsKey(args[1])){
-                                File file= new File(System.getProperty("user.dir"), "user.scv");
+                                File file= new File(System.getProperty("user.dir"), "user.csv");
                                 FileWriter fileWriter = new FileWriter(file, true);
-                                fileWriter.write(username + "," + password);
+                                fileWriter.write(args[1] + "," + args[2]);
                                 fileWriter.write(System.getProperty("line.separator"));
                                 fileWriter.close();
                                 server.users.put(args[1], args[2]);
