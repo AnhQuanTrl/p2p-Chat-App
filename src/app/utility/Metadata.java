@@ -30,6 +30,9 @@ public class Metadata {
     public Boolean containUser(String username) {
         return connectUsers.containsKey(username);
     }
+    public JFrame findFrame(String username) {
+        return connectUsers.get(username);
+    }
     public void removeConnectedUser(String username) {
         connectUsers.remove(username);
     }

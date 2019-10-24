@@ -17,6 +17,9 @@ public class ServerLogin {
         this.port = port;
         File file= new File(System.getProperty("user.dir"), "user.csv");
         try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
             BufferedReader fileReader = new BufferedReader(new FileReader(file));
             String row;
             while ((row = fileReader.readLine()) != null) {
@@ -87,6 +90,37 @@ public class ServerLogin {
             if (!entry.getKey().equals(excludeUser)) {
                 message.append(entry.getKey()).append(",").append(entry.getValue()).append(" ");
             }
+        }
+        return message.toString();
+    }
+
+    String printAllFriends(String username) {
+        File file= new File(System.getProperty("user.dir"), "user.csv");
+        StringBuilder message = new StringBuilder("/UNFETCH ");
+        String[] friends = null;
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            BufferedReader fileReader = new BufferedReader(new FileReader(file));
+            String row;
+            while ((row = fileReader.readLine()) != null) {
+                String[] userField = row.split(",");
+                if (userField[0].equals(username)) {
+                    friends = userField[2].split(",");
+                    break;
+                }
+            }
+            fileReader.close();
+            for (String friend : friends) {
+                message.append(friend).append(",");
+                if (loginUser.get(friend) != null) message.append(loginUser.get(friend));
+                message.append(" ");
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return message.toString();
     }

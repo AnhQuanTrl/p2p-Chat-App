@@ -7,6 +7,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SocketReader extends SwingWorker<Void, String> {
@@ -17,7 +18,7 @@ public class SocketReader extends SwingWorker<Void, String> {
     private JFrame frame;
     private SocketWriter writer;
     private String fileName = null;
-    private List<String> fileParts = new ArrayList<>();
+    private List<String> fileParts = new LinkedList<>();
     String returnMessage = null;
     public SocketReader(Socket socket, JFrame frame, SocketWriter writer) {
         this.socket = socket;
@@ -38,7 +39,7 @@ public class SocketReader extends SwingWorker<Void, String> {
 
     @Override
     protected Void doInBackground() throws Exception {
-        try (InputStream in = socket.getInputStream()) {
+        try (InputStream in = socket.getInputStream()){
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             String serverInput = null;
             loop: do {
@@ -55,7 +56,7 @@ public class SocketReader extends SwingWorker<Void, String> {
                             int dialogResult = JOptionPane.showConfirmDialog(null, "accept file transfer", "File Transfer",JOptionPane.YES_NO_OPTION);
                             if (dialogResult == JOptionPane.YES_OPTION) {
                                 writer.write("/ACCEPT-FILE " + args[1]);
-                                fileName = args[1];
+                                fileName = serverInput.substring(serverInput.indexOf(" "));
                             } else {
                                 writer.write("/DENY-FILE " + args[1]);
                             }
@@ -126,6 +127,7 @@ public class SocketReader extends SwingWorker<Void, String> {
                 byte[] result = Base64.getDecoder().decode(filePart);
                 fileOut.write(result);
             }
+            fileOut.close();
             fileName = null;
         } catch (FileNotFoundException e) {
             System.out.println("Find not found!");

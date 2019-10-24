@@ -1,6 +1,7 @@
 package app.peer.socket;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -55,6 +56,8 @@ public class SocketWriter extends SwingWorker<Void, Void> {
                         writer.println(text);
                     }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         return null;
     }

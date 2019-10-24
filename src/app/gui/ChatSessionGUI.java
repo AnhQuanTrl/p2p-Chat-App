@@ -45,7 +45,7 @@ public class ChatSessionGUI implements Runnable {
     @Override
     public void run() {
         frame = new JFrame();
-        frame.setTitle("Chat");
+        frame.setTitle("Chat with " + username);
         frame.setBounds(100, 100, 729, 606);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
@@ -229,7 +229,6 @@ public class ChatSessionGUI implements Runnable {
                 StyleConstants.setAlignment(right, StyleConstants.ALIGN_RIGHT);
                 StyleConstants.setForeground(right, Color.BLUE);
                 String text = e.getActionCommand();
-                System.out.println(text);
                 try {
                     doc.insertString(doc.getLength(), text, left );
                     doc.setParagraphAttributes(doc.getLength(), 1, left, false);
@@ -245,7 +244,8 @@ public class ChatSessionGUI implements Runnable {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 if ("state".equals(evt.getPropertyName()) && SwingWorker.StateValue.DONE == evt.getNewValue()) {
-                    System.out.println("here");
+                    btnSendFile.setEnabled(false);
+                    btnSendFile.setDisabledIcon(btnSendFile.getIcon());
                     textField.setEditable(false);
                 }
             }

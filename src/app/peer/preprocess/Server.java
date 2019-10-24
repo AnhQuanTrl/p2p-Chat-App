@@ -1,7 +1,6 @@
-package app.peer.listener;
+package app.peer.preprocess;
 
 import app.gui.ChatSessionGUI;
-import app.utility.Metadata;
 
 import javax.swing.*;
 import java.io.*;

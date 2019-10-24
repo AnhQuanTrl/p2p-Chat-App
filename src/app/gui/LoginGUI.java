@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class LoginGUI implements Runnable {
@@ -68,13 +69,14 @@ public class LoginGUI implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Socket socket = new Socket("192.168.100.103", 7000);
+                    Socket socket = new Socket();
+                    socket.connect(new InetSocketAddress("192.168.1.167", 7000), 2000);
                     String username = textUsername.getText();
                     String password = new String(passwordField.getPassword());
                     LogInWorker logInWorker = new LogInWorker(socket, username, password, frame);
                     logInWorker.execute();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(frame, "Host doesnt exist");
                 }
 
             }

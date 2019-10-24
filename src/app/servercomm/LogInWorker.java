@@ -1,7 +1,6 @@
 package app.servercomm;
 
 import app.gui.PeerSelectionGUI;
-import app.peer.listener.Server;
 import app.utility.Metadata;
 
 import javax.swing.*;
@@ -45,7 +44,6 @@ public class LogInWorker extends SwingWorker<Boolean, Void> {
             if (result) {
                 JOptionPane.showMessageDialog(frame, "Login Successfully");
                 frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-                Metadata.getInstance().setUsername("");
                 SwingUtilities.invokeLater(new PeerSelectionGUI());
             } else {
                 JOptionPane.showMessageDialog(frame, "Login Failed");
