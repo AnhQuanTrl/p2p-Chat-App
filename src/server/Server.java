@@ -5,7 +5,7 @@ import java.net.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ServerLogin {
+public class Server {
     private int port;
     private Set<ClientThread> clientThreads = new HashSet<>();
     Map<String,String> users = Collections.synchronizedMap(new HashMap<>());
@@ -13,7 +13,7 @@ public class ServerLogin {
     private File userFile;
     private File friendFile;
     Map<String, InetAddress> loginUser = new HashMap<>();
-    public ServerLogin(int port){
+    public Server(int port){
         this.port = port;
         try {
             userFile = new File(System.getProperty("user.dir"), "user.csv");
@@ -91,7 +91,7 @@ public class ServerLogin {
     }
 
     public static void main(String[] args) {
-        ServerLogin server = new ServerLogin(7000);
+        Server server = new Server(7000);
         server.loadCSV();
         Runtime.getRuntime().addShutdownHook(new Thread(){
             @Override

@@ -1,4 +1,4 @@
-package app.peer.preprocess;
+package app.peer.listener;
 
 import app.gui.ChatSessionGUI;
 
@@ -8,7 +8,7 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server extends SwingWorker<Void, Void> {
+public class SocketListener extends SwingWorker<Void, Void> {
     private int port = 8989;
     private ServerSocket serverSocket;
     public void setCancel(Boolean cancel) {
@@ -16,7 +16,7 @@ public class Server extends SwingWorker<Void, Void> {
     }
 
     private Boolean isCancel = false;
-    public Server () {
+    public SocketListener() {
         this.port = port;
     }
     @Override

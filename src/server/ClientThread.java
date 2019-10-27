@@ -6,7 +6,7 @@ import java.net.Socket;
 
 public class ClientThread extends Thread{
     private Socket socket;
-    private ServerLogin server;
+    private Server server;
     private PrintWriter writer;
 
     public String getUsername() {
@@ -20,7 +20,7 @@ public class ClientThread extends Thread{
     private String username;
     private String password;
 
-    public ClientThread(Socket socket, ServerLogin server) {
+    public ClientThread(Socket socket, Server server) {
         this.socket = socket;
         this.server = server;
     }

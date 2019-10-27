@@ -1,9 +1,8 @@
 package app.gui;
 
-import app.peer.preprocess.Server;
+import app.peer.listener.SocketListener;
 import app.servercomm.AddFriendWorker;
 import app.servercomm.FetchWorker;
-import app.servercomm.FriendQueryWorker;
 import app.utility.Metadata;
 import app.utility.UserIP;
 import app.utility.UserListCellRendered;
@@ -21,7 +20,7 @@ import java.net.UnknownHostException;
 public class PeerSelectionGUI implements Runnable {
 
     private JFrame frame;
-    private Server server;
+    private SocketListener socketListener;
     private JTextField txtHost;
     private JTextField txtPort;
     private JTextField textField;
@@ -31,8 +30,8 @@ public class PeerSelectionGUI implements Runnable {
 
     @Override
     public void run() {
-        server = new Server();
-        server.execute();
+        socketListener = new SocketListener();
+        socketListener.execute();
         frame = new JFrame();
         frame.setTitle("Peer Selection");
         frame.setBounds(100, 100, 325, 580);
@@ -185,7 +184,7 @@ public class PeerSelectionGUI implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (fetchWorker != null) fetchWorker.setCancel(true);
-                server.cancel(true);
+                socketListener.cancel(true);
                 SwingUtilities.invokeLater(new LoginGUI());
                 Metadata.getInstance().disposeAllFrame();
                 frame.dispose();
