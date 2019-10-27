@@ -92,7 +92,7 @@ public class SocketReader extends SwingWorker<Void, String> {
                     }
                     System.out.println(fileParts);
                 }
-            } while (serverInput != null && !serverInput.equals("/exit") && !isCancelled());
+            } while (serverInput != null && !serverInput.equals("/EXIT") && !isCancelled());
         }
         returnMessage = "Your peer has disconnected";
         return null;
