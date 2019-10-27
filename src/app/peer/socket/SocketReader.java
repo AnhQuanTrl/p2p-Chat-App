@@ -83,10 +83,11 @@ public class SocketReader extends SwingWorker<Void, String> {
                             fileParts.add(args[1]);
                             break;
                         case "/FILE-END":
-                            assembleFile();
+                            FileAssembler fileAssembler = new FileAssembler(frame, fileName, fileParts);
+                            fileAssembler.execute();
                             break;
                         case "/MESSAGE":
-                            publish(serverInput.substring(serverInput.indexOf(" "))+1);
+                            publish(serverInput.substring(serverInput.indexOf(" ")+1));
                             break;
                     }
                     System.out.println(fileParts);
@@ -109,30 +110,6 @@ public class SocketReader extends SwingWorker<Void, String> {
             for (ActionListener listener : actionListeners) {
                 listener.actionPerformed(evt);
             }
-        }
-    }
-
-    private void assembleFile() {
-        try {
-            if (fileName == null) return;
-            String extension = fileName.substring(fileName.lastIndexOf("."));
-            String nameWithoutExtension = fileName.substring(0, fileName.lastIndexOf("."));
-            String myDir = System.getProperty("user.dir");
-            File file = new File(myDir, fileName);
-            for (int num = 1; file.exists(); num++) {
-                file = new File(myDir, nameWithoutExtension + "(" + num + ")" + "." + extension);
-            }
-            FileOutputStream fileOut = new FileOutputStream(file);
-            for (String filePart : fileParts) {
-                byte[] result = Base64.getDecoder().decode(filePart);
-                fileOut.write(result);
-            }
-            fileOut.close();
-            fileName = null;
-        } catch (FileNotFoundException e) {
-            System.out.println("Find not found!");
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }
