@@ -3,7 +3,6 @@ package server;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ServerLogin {
@@ -37,7 +36,6 @@ public class ServerLogin {
         try(final DatagramSocket socket = new DatagramSocket()){
             socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
             String ip = socket.getLocalAddress().getHostAddress();
-            System.out.print(ip);
         } catch (UnknownHostException | SocketException e) {
             e.printStackTrace();
         }
@@ -105,7 +103,6 @@ public class ServerLogin {
             String row;
             while ((row = fileReader.readLine()) != null) {
                 String[] userField = row.split(",");
-                System.out.println(row);
                 if (userField[0].equals(username) && userField.length >= 3) {
                     List<String> clist = Arrays.asList(userField);
                     friends = clist.subList(2, clist.size());
@@ -125,7 +122,6 @@ public class ServerLogin {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(message.toString());
         return message.toString();
     }
     Boolean addFriendIfAlreadyExist(String source, String target) {
@@ -166,6 +162,7 @@ public class ServerLogin {
         }
         return true;
     }
+
     Set<String> searchUser(String query) {
         Set<String> set = users.keySet().stream().filter(s -> s.contains(query)).collect(Collectors.toSet());
         return set;

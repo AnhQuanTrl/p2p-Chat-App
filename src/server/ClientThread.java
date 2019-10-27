@@ -2,10 +2,7 @@ package server;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
-import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.Set;
+
 
 public class ClientThread extends Thread{
     private Socket socket;
@@ -42,6 +39,7 @@ public class ClientThread extends Thread{
             while (!exit) {
                 command = reader.readLine();
                 String[] args = command.split("\\s+");
+                System.out.println(command);
                 switch (args[0]) {
                     case "/LOGIN":
                         if (args.length < 3) {

@@ -5,6 +5,8 @@ import app.servercomm.AddFriendWorker;
 import app.servercomm.FetchWorker;
 import app.servercomm.FriendQueryWorker;
 import app.utility.Metadata;
+import app.utility.UserIP;
+import app.utility.UserListCellRendered;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -12,7 +14,9 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class PeerSelectionGUI implements Runnable {
 
@@ -52,8 +56,9 @@ public class PeerSelectionGUI implements Runnable {
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBounds(6, 15, 266, 317);
         panel_1.add(scrollPane);
-        DefaultListModel<String> listModel = new DefaultListModel<>();
+        DefaultListModel<UserIP> listModel = new DefaultListModel<>();
         JList list = new JList(listModel);
+        list.setCellRenderer(new UserListCellRendered());
         scrollPane.setViewportView(list);
         list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         list.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -94,14 +99,13 @@ public class PeerSelectionGUI implements Runnable {
                     if (e.getClickCount() == 2) {
                         JList list = (JList) e.getSource();
                         int index = list.locationToIndex(e.getPoint());
-                        String user = listModel.get(index);
-                        String[] args = user.split(",");
-                        if (!Metadata.getInstance().containUser(args[0])) {
+                        UserIP userIP = listModel.get(index);
+                        if (!Metadata.getInstance().containUser(userIP.getUsername())) {
                             Socket socket = null;
-                            socket = new Socket(args[1].substring(1), 8989);
-                            SwingUtilities.invokeLater(new ChatSessionGUI(socket, args[0]));
+                            socket = new Socket(userIP.getInetAddress(), 8989);
+                            SwingUtilities.invokeLater(new ChatSessionGUI(socket, userIP.getUsername()));
                         } else {
-                            JFrame frame = Metadata.getInstance().findFrame(args[0]);
+                            JFrame frame = Metadata.getInstance().findFrame(userIP.getUsername());
                             frame.toFront();
                         }
                     }
@@ -113,17 +117,28 @@ public class PeerSelectionGUI implements Runnable {
         });
         Socket socket = null;
         try {
-            socket = new Socket("192.168.1.158", 7000);
+            socket = new Socket("192.168.1.31", 7000);
             fetchWorker = new FetchWorker(socket, frame);
             fetchWorker.execute();
             fetchWorker.addActionListeners(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     listModel.clear();
-                    String[] users = e.getActionCommand().split(" ");
-                    for (String user : users) {
-                        System.out.println(user);
-                        listModel.addElement(user);
+                    String[] userEntries = e.getActionCommand().split(" ");
+                    for (String user : userEntries) {
+                        String args[] = user.split(",");
+                        try {
+                            UserIP userIP;
+                            if (args.length < 2) {
+                                userIP = new UserIP(args[0], null);
+                            }
+                            else {
+                                userIP = new UserIP(args[0], InetAddress.getByName(args[1].substring(1)));
+                            }
+                            listModel.addElement(userIP);
+                        } catch (UnknownHostException ex) {
+                            ex.printStackTrace();
+                        }
 //                        for (String user : users) {
 ////                            String[] args = user.split(",");
 ////                            listModel.addElement(new UserIP());
@@ -140,7 +155,7 @@ public class PeerSelectionGUI implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 Socket socket = null;
                 try {
-                    socket = new Socket("192.168.1.158", 7000);
+                    socket = new Socket("192.168.1.31", 7000);
                     AddFriendWorker addFriendWorker = new AddFriendWorker(socket, textField.getText(), frame);
                     addFriendWorker.execute();
                 } catch (IOException ex) {
@@ -156,7 +171,7 @@ public class PeerSelectionGUI implements Runnable {
 //                        JList list = (JList) e.getSource();
 //                        int index = list.locationToIndex(e.getPoint());
 //                        String friend = searchListModel.get(index);
-//                        Socket socket = new Socket("192.168.1.158", 7000);
+//                        Socket socket = new Socket("192.168.1.31", 7000);
 //                        AddFriendWorker addFriendWorker = new AddFriendWorker(socket, friend, frame);
 //                        addFriendWorker.execute();
 //                    }
@@ -172,6 +187,7 @@ public class PeerSelectionGUI implements Runnable {
                 if (fetchWorker != null) fetchWorker.setCancel(true);
                 server.cancel(true);
                 SwingUtilities.invokeLater(new LoginGUI());
+                Metadata.getInstance().disposeAllFrame();
                 frame.dispose();
             }
         });

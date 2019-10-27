@@ -1,6 +1,7 @@
 package app.gui;
 
 import app.servercomm.RegisterWorker;
+import jdk.nashorn.internal.scripts.JO;
 
 import java.awt.EventQueue;
 
@@ -13,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class RegisterGUI implements Runnable{
@@ -72,13 +74,14 @@ public class RegisterGUI implements Runnable{
 			public void actionPerformed(ActionEvent e) {
 				Socket socket = null;
 				try {
-					socket = new Socket("192.168.1.158", 7000);
+					socket = new Socket();
+					socket.connect(new InetSocketAddress("192.168.1.31", 7000), 2000);
 					String password = new String(passwordField.getPassword()); //nguy hiem
 					String username = textField.getText();
 					RegisterWorker registerWorker = new RegisterWorker(socket, username, password, frame);
 					registerWorker.execute();
 				} catch (IOException ex) {
-					ex.printStackTrace();
+					JOptionPane.showMessageDialog(frame,"Host not found");
 				}
 
 			}

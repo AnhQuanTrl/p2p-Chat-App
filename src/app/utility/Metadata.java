@@ -1,6 +1,7 @@
 package app.utility;
 
 import javax.swing.*;
+import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -35,6 +36,13 @@ public class Metadata {
     }
     public void removeConnectedUser(String username) {
         connectUsers.remove(username);
+    }
+
+    public void disposeAllFrame() {
+        for (Map.Entry<String, JFrame> entry : connectUsers.entrySet()) {
+            JFrame frame = entry.getValue();
+            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+        }
     }
 }
 
