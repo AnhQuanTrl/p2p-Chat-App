@@ -8,6 +8,11 @@ import java.util.Map;
 import java.util.Set;
 
 public class Metadata {
+    public String getHostIP() {
+        return hostIP;
+    }
+
+    private String hostIP = "192.168.137.44";
     private static final Metadata instance = new Metadata();
     private Map<String, JFrame> connectUsers;
     public void setUsername(String username) {
@@ -44,5 +49,6 @@ public class Metadata {
             frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
         }
     }
+
 }
 

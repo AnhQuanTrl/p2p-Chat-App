@@ -56,7 +56,7 @@ public class SocketReader extends SwingWorker<Void, String> {
                             int dialogResult = JOptionPane.showConfirmDialog(null, "accept file transfer", "File Transfer",JOptionPane.YES_NO_OPTION);
                             if (dialogResult == JOptionPane.YES_OPTION) {
                                 writer.write("/ACCEPT-FILE " + args[1]);
-                                fileName = serverInput.substring(serverInput.indexOf(" "));
+                                fileName = serverInput.substring(serverInput.indexOf(" ")+1);
                             } else {
                                 writer.write("/DENY-FILE " + args[1]);
                             }
@@ -86,7 +86,7 @@ public class SocketReader extends SwingWorker<Void, String> {
                             assembleFile();
                             break;
                         case "/MESSAGE":
-                            publish(serverInput.substring(serverInput.indexOf(" ")));
+                            publish(serverInput.substring(serverInput.indexOf(" "))+1);
                             break;
                     }
                     System.out.println(fileParts);

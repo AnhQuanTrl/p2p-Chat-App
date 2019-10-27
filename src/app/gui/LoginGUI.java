@@ -1,6 +1,7 @@
 package app.gui;
 
 import app.servercomm.LogInWorker;
+import app.utility.Metadata;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -70,7 +71,7 @@ public class LoginGUI implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 try {
                     Socket socket = new Socket();
-                    socket.connect(new InetSocketAddress("192.168.1.31", 7000), 2000);
+                    socket.connect(new InetSocketAddress(Metadata.getInstance().getHostIP(), 7000), 2000);
                     String username = textUsername.getText();
                     String password = new String(passwordField.getPassword());
                     LogInWorker logInWorker = new LogInWorker(socket, username, password, frame);

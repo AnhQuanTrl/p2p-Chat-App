@@ -1,6 +1,7 @@
 package app.gui;
 
 import app.servercomm.RegisterWorker;
+import app.utility.Metadata;
 import jdk.nashorn.internal.scripts.JO;
 
 import java.awt.EventQueue;
@@ -75,7 +76,7 @@ public class RegisterGUI implements Runnable{
 				Socket socket = null;
 				try {
 					socket = new Socket();
-					socket.connect(new InetSocketAddress("192.168.1.31", 7000), 2000);
+					socket.connect(new InetSocketAddress(Metadata.getInstance().getHostIP(), 7000), 2000);
 					String password = new String(passwordField.getPassword()); //nguy hiem
 					String username = textField.getText();
 					RegisterWorker registerWorker = new RegisterWorker(socket, username, password, frame);

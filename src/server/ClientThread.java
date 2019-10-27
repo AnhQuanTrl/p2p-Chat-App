@@ -61,11 +61,6 @@ public class ClientThread extends Thread{
                             writer.println("USAGE: /SIGNUP <username> <password>");
                         } else {
                             if (!server.users.containsKey(args[1])){
-                                File file= new File(System.getProperty("user.dir"), "user.csv");
-                                FileWriter fileWriter = new FileWriter(file, true);
-                                fileWriter.write(args[1] + "," + args[2]);
-                                fileWriter.write(System.getProperty("line.separator"));
-                                fileWriter.close();
                                 server.users.put(args[1], args[2]);
                                 writer.println("/ACCEPT-SIGNUP");
                                 break;
@@ -77,7 +72,7 @@ public class ClientThread extends Thread{
                         break;
                     case "/FETCH":
                         username = args[1];
-                        writer.println(server.printAllFriends(username));
+                        writer.println("/UNFETCH " + server.printAllFriends(username));
                         break;
                     case "/FRIEND-QUERY":
                         String query = args[1];

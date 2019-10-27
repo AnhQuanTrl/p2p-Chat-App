@@ -117,7 +117,7 @@ public class PeerSelectionGUI implements Runnable {
         });
         Socket socket = null;
         try {
-            socket = new Socket("192.168.1.31", 7000);
+            socket = new Socket(Metadata.getInstance().getHostIP(), 7000);
             fetchWorker = new FetchWorker(socket, frame);
             fetchWorker.execute();
             fetchWorker.addActionListeners(new ActionListener() {
@@ -155,7 +155,7 @@ public class PeerSelectionGUI implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 Socket socket = null;
                 try {
-                    socket = new Socket("192.168.1.31", 7000);
+                    socket = new Socket(Metadata.getInstance().getHostIP(), 7000);
                     AddFriendWorker addFriendWorker = new AddFriendWorker(socket, textField.getText(), frame);
                     addFriendWorker.execute();
                 } catch (IOException ex) {
@@ -171,7 +171,7 @@ public class PeerSelectionGUI implements Runnable {
 //                        JList list = (JList) e.getSource();
 //                        int index = list.locationToIndex(e.getPoint());
 //                        String friend = searchListModel.get(index);
-//                        Socket socket = new Socket("192.168.1.31", 7000);
+//                        Socket socket = new Socket(Metadata.getInstance().getHostIP(), 7000);
 //                        AddFriendWorker addFriendWorker = new AddFriendWorker(socket, friend, frame);
 //                        addFriendWorker.execute();
 //                    }

@@ -39,6 +39,7 @@ public class FetchWorker extends SwingWorker<Void, String> {
             while (!isCancel) {
                 writer.println("/FETCH " + Metadata.getInstance().getUsername());
                 String res = reader.readLine();
+                System.out.println(res);
                 publish(res);
                 Thread.sleep(3000);
             }
@@ -60,7 +61,7 @@ public class FetchWorker extends SwingWorker<Void, String> {
     @Override
     protected void process(List<String> chunks) {
         for (String text : chunks) {
-            text = text.substring(text.indexOf(" "));
+            text = text.substring(text.indexOf(" ")+1);
             ActionEvent evt = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, text);
             for (ActionListener listener : actionListeners) {
                 listener.actionPerformed(evt);
