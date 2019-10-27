@@ -180,6 +180,8 @@ public class ServerLogin {
 //        return message.toString();
     }
     Boolean addFriendIfAlreadyExist(String source, String target) {
+        if (!users.containsKey(target))
+            return false;
         if (friends.containsKey(source)) {
             Set<String> friendSet = friends.get(source);
             if (!friendSet.contains(target)) {
