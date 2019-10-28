@@ -1,13 +1,12 @@
 package app.gui;
 import app.utility.Metadata;
 
-import java.awt.EventQueue;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 
 public class SelectHostGUI implements Runnable {
     private JFrame frame;
@@ -18,7 +17,7 @@ public class SelectHostGUI implements Runnable {
     public void run() {
         frame = new JFrame();
         frame.setTitle("Enter Server Host");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setBounds(100, 100, 450, 114);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -39,6 +38,7 @@ public class SelectHostGUI implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 Metadata.getInstance().setHostIP(txtHost.getText());
                 SwingUtilities.invokeLater(new LoginGUI());
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
             }
         });
         frame.setVisible(true);

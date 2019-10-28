@@ -2,9 +2,6 @@ package app.gui;
 
 import app.servercomm.RegisterWorker;
 import app.utility.Metadata;
-import jdk.nashorn.internal.scripts.JO;
-
-import java.awt.EventQueue;
 
 import javax.swing.*;
 import java.awt.BorderLayout;
@@ -12,8 +9,6 @@ import javax.swing.border.TitledBorder;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;

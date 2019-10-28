@@ -137,7 +137,7 @@ public class ChatSessionGUI implements Runnable {
                                 } else {
                                     file = null;
                                     fileInProgress = false;
-                                    System.out.println("File denied");
+                                    JOptionPane.showMessageDialog(frame, "File Request Denied");
                                 }
                             }
                         });
@@ -182,7 +182,7 @@ public class ChatSessionGUI implements Runnable {
         textField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                System.out.println(textField.getText());
                 writer.write("/MESSAGE " + textField.getText());
                 try {
                     StyledDocument doc = txtChat.getStyledDocument();

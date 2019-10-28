@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -51,7 +50,7 @@ public class SocketReader extends SwingWorker<Void, String> {
                             break;
                         case "/DENY-SESSION":
                             returnMessage = "Your peer deny the chat request";
-                            break loop;
+                            return null;
                         case "/REQUEST-FILE":
                             int dialogResult = JOptionPane.showConfirmDialog(null, "accept file transfer", "File Transfer",JOptionPane.YES_NO_OPTION);
                             if (dialogResult == JOptionPane.YES_OPTION) {
@@ -85,6 +84,7 @@ public class SocketReader extends SwingWorker<Void, String> {
                         case "/FILE-END":
                             FileAssembler fileAssembler = new FileAssembler(frame, fileName, fileParts);
                             fileAssembler.execute();
+                            fileParts.clear();
                             break;
                         case "/MESSAGE":
                             publish(serverInput.substring(serverInput.indexOf(" ")+1));

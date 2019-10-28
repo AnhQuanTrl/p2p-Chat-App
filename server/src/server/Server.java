@@ -158,9 +158,10 @@ public class Server {
             friends.put(source, new HashSet<>());
         }
         Set<String> friendSet = friends.get(source);
-        if (!friendSet.contains(target)) {
-            friendSet.add(target);
+        if (friendSet.contains(target)) {
+            return false;
         }
+        friendSet.add(target);
         return true;
     }
 

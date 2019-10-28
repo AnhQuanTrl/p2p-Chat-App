@@ -3,9 +3,7 @@ package app.utility;
 import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class Metadata {
     public String getHostIP() {

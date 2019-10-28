@@ -1,18 +1,15 @@
 package app.servercomm;
 
 
-import app.gui.PeerSelectionGUI;
 import app.utility.Metadata;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class FetchWorker extends SwingWorker<Void, String> {
     private Socket socket;
