@@ -1,9 +1,10 @@
 package app;
-import app.gui.LoginGUI;
+import app.gui.SelectHostGUI;
+
 import javax.swing.*;
 
 public class EntryPoint {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new LoginGUI());
+        SwingUtilities.invokeLater(new SelectHostGUI());
     }
 }
