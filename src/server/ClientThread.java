@@ -86,6 +86,7 @@ public class ClientThread extends Thread{
                         } else {
                             writer.println("/DENY-FRIEND-REQUEST");
                         }
+                        break;
                     case "/LOGOUT":
                         exit = true;
                         server.loginUser.remove(args[1]);
@@ -103,6 +104,7 @@ public class ClientThread extends Thread{
 
         } catch (IOException ex) {
             server.removeUser(this);
+            System.out.println("here");
             server.loginUser.remove(username);
             try {
                 socket.close();

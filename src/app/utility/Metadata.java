@@ -12,7 +12,7 @@ public class Metadata {
         return hostIP;
     }
 
-    private String hostIP = "192.168.137.44";
+    private String hostIP = "192.168.100.111";
     private static final Metadata instance = new Metadata();
     private Map<String, JFrame> connectUsers;
     public void setUsername(String username) {

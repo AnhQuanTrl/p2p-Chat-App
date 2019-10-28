@@ -31,7 +31,7 @@ public class RegisterWorker extends SwingWorker<Boolean, Void> {
                 writer.println("/EXIT");
                 return true;
             }
-            socket.close();
+            writer.println("/EXIT");
         } catch (IOException e) {
             e.printStackTrace();
         }

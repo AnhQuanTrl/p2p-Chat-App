@@ -33,6 +33,7 @@ public class LogInWorker extends SwingWorker<Boolean, Void> {
                 writer.println("/EXIT");
                 return true;
             }
+            writer.println("/EXIT");
         }
         return false;
     }
@@ -48,6 +49,7 @@ public class LogInWorker extends SwingWorker<Boolean, Void> {
             } else {
                 JOptionPane.showMessageDialog(frame, "Login Failed");
             }
+
             socket.close();
 
         } catch (IOException e) {

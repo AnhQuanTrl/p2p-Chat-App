@@ -142,90 +142,26 @@ public class Server {
             Set<String> friendSet = friends.get(username);
             for (String friend : friendSet) {
                 stringBuilder.append(friend).append(",");
+                System.out.println(loginUser);
                 if (loginUser.containsKey(friend)) stringBuilder.append(loginUser.get(friend));
                 stringBuilder.append(" ");
             }
         }
         return stringBuilder.toString();
-//        File file= new File(System.getProperty("user.dir"), "user.csv");
-//        StringBuilder message = new StringBuilder("/UNFETCH ");
-//        List<String> friends = new ArrayList<>();
-//        try {
-//            if (!file.exists()) {
-//                file.createNewFile();
-//            }
-//            BufferedReader fileReader = new BufferedReader(new FileReader(file));
-//            String row;
-//            while ((row = fileReader.readLine()) != null) {
-//                String[] userField = row.split(",");
-//                if (userField[0].equals(username) && userField.length >= 3) {
-//                    List<String> clist = Arrays.asList(userField);
-//                    friends = clist.subList(2, clist.size());
-//                    break;
-//                }
-//            }
-//            fileReader.close();
-//            if (friends != null) {
-//                for (String friend: friends) {
-//                    message.append(friend).append(",");
-//                    if (loginUser.get(friend) != null) message.append(loginUser.get(friend));
-//                    message.append(" ");
-//                }
-//            }
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return message.toString();
+
     }
+
     Boolean addFriendIfAlreadyExist(String source, String target) {
         if (!users.containsKey(target) || target.equals(source))
             return false;
-        if (friends.containsKey(source)) {
-            Set<String> friendSet = friends.get(source);
-            if (!friendSet.contains(target)) {
-                friendSet.add(target);
-                return true;
-            }
+        if (!friends.containsKey(source)) {
+            friends.put(source, new HashSet<>());
         }
-        return false;
-//        File file= new File(System.getProperty("user.dir"), "user.csv");
-//        try {
-//            if (!file.exists()) {
-//                file.createNewFile();
-//            }
-//            BufferedReader fileReader = new BufferedReader(new FileReader(file));
-//            String row;
-//            List<String> list = new ArrayList<>();
-//            while ((row = fileReader.readLine()) != null) {
-//                list.add(row);
-//                String[] userField = row.split(",");
-//                if (userField[0].equals(source)) {
-//                    List clist = Arrays.asList(userField);
-//                    List friends = clist.subList(2, clist.size());
-//                    if (friends == null || !friends.contains(target)) {
-//                        StringBuilder stringBuilder = new StringBuilder(row);
-//                        stringBuilder.append(",").append(target);
-//                        list.set(list.size() - 1, stringBuilder.toString());
-//                    } else {
-//                        return false;
-//                    }
-//                }
-//            }
-//            fileReader.close();
-//            FileWriter fileWriter = new FileWriter(file);
-//            for (String element : list) {
-//                fileWriter.write(element);
-//                fileWriter.write("\n");
-//            }
-//            fileWriter.close();
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return true;
+        Set<String> friendSet = friends.get(source);
+        if (!friendSet.contains(target)) {
+            friendSet.add(target);
+        }
+        return true;
     }
 
     Set<String> searchUser(String query) {
