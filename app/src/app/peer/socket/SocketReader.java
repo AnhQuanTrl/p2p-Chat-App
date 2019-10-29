@@ -15,9 +15,9 @@ public class SocketReader extends SwingWorker<Void, String> {
     private List<ActionListener> fileActionListeners;
     private Socket socket;
     private JFrame frame;
+    private FileAssembler fileAssembler;
     private SocketWriter writer;
     private String fileName = null;
-    private List<String> fileParts = new LinkedList<>();
     String returnMessage = null;
     public SocketReader(Socket socket, JFrame frame, SocketWriter writer) {
         this.socket = socket;
@@ -59,7 +59,6 @@ public class SocketReader extends SwingWorker<Void, String> {
                             } else {
                                 writer.write("/DENY-FILE " + args[1]);
                             }
-                            System.out.println("Still OK");
                             break;
                         case "/ACCEPT-FILE":
                             ActionEvent acceptEvt = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "accept:"+args[1]);
@@ -76,21 +75,20 @@ public class SocketReader extends SwingWorker<Void, String> {
                             removeFileActionListener();
                             break;
                         case "/FILE-BEGIN":
-                            fileParts.clear();
+                            fileAssembler = new FileAssembler(frame, fileName);
+                            fileAssembler.execute();
                             break;
                         case "/FILE-PART":
-                            fileParts.add(args[1]);
+                            fileAssembler.addFilePart(args[1]);
                             break;
                         case "/FILE-END":
-                            FileAssembler fileAssembler = new FileAssembler(frame, fileName, fileParts);
-                            fileAssembler.execute();
-                            fileParts.clear();
+                            fileAssembler.setJobLeft(false);
+                            fileAssembler = null;
                             break;
                         case "/MESSAGE":
                             publish(serverInput.substring(serverInput.indexOf(" ")+1));
                             break;
                     }
-                    System.out.println(fileParts);
                 }
             } while (serverInput != null && !serverInput.equals("/EXIT") && !isCancelled());
         }
