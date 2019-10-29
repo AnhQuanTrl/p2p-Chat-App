@@ -74,6 +74,9 @@ public class ClientThread extends Thread{
                         username = args[1];
                         writer.println("/UNFETCH " + server.printAllFriends(username));
                         break;
+                    case "/WEB-FETCH":
+                        writer.println("/WEB-UNFETCH " + server.printAllUser());
+                        break;
                     case "/FRIEND-QUERY":
                         String query = args[1];
                         String message = String.join(",", server.searchUser(query));

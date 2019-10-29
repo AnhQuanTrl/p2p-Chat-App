@@ -126,11 +126,11 @@ public class Server {
         return !this.users.isEmpty();
     }
 
-    String printAllUser(String excludeUser) {
+    String printAllUser() {
         StringBuilder message = new StringBuilder("/UNFETCH ");
         for (Map.Entry<String, InetAddress> entry : loginUser.entrySet()) {
-            if (!entry.getKey().equals(excludeUser)) {
-                message.append(entry.getKey()).append(",").append(entry.getValue()).append(" ");
+            if (entry.getValue() != null) {
+                message.append(entry.getValue()).append(" ");
             }
         }
         return message.toString();
