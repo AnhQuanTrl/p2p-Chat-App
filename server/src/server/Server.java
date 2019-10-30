@@ -127,7 +127,7 @@ public class Server {
     }
 
     String printAllUser() {
-        StringBuilder message = new StringBuilder("/UNFETCH ");
+        StringBuilder message = new StringBuilder("");
         for (Map.Entry<String, InetAddress> entry : loginUser.entrySet()) {
             if (entry.getValue() != null) {
                 message.append(entry.getValue()).append(" ");

@@ -61,12 +61,11 @@ $(function(){
 
         $('.form-popup').hide();
     })
-
+    textInput.prop('disabled', true);
     $('.open-button').on('click', function(e)
     {
         e.preventDefault();
         // Firstly, disable the text input...
-        textInput.prop('disabled', true);
 
         // Then try to establish the connection
         socket.emit('request_connection');

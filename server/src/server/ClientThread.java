@@ -39,7 +39,6 @@ public class ClientThread extends Thread{
             while (!exit) {
                 command = reader.readLine();
                 String[] args = command.split("\\s+");
-                System.out.println(command);
                 switch (args[0]) {
                     case "/LOGIN":
                         if (args.length < 3) {

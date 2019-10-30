@@ -50,13 +50,13 @@ client.get('/', function (req, res) {
 
 
                 socket_to_server.once('data', function (data) {
-                    data = data.split(/ \r?\n/)[0].substring(data.search("/UNFETCH ") + "/UNFETCH ".length);
+                    data = data.split(/ \r?\n/)[0].substring(data.search("/WEB-UNFETCH ") + "/WEB-UNFETCH ".length);
                     data = data.split(" ");
                     var available_admins = new Set();
                     data.forEach(element => {
                         available_admins.add(element.replace('/', ""));
                     });
-
+                    socket_to_server.write('/EXIT');
                     socket_to_server.end();
 
                     if (available_admins.size != 0) {
