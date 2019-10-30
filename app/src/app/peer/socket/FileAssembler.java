@@ -44,6 +44,11 @@ public class FileAssembler  extends SwingWorker<Void, Void> {
                 synchronized (fileParts) {
                     cache = new LinkedList<>(fileParts);
                     fileParts.clear();
+//                    for (String text : fileParts) {
+//                        byte[] result = Base64.getDecoder().decode(text);
+//                        fileOut.write(result);
+//                    }
+//                    fileParts.clear();
                 }
                 for (String text : cache) {
                     byte[] result = Base64.getDecoder().decode(text);
