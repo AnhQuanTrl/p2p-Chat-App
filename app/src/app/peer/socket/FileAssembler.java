@@ -79,7 +79,7 @@ public class FileAssembler  extends SwingWorker<Void, Void> {
     }
     @Override
     protected void done() {
-        String extension = fileName.substring(fileName.lastIndexOf("."));
+        String extension = fileName.substring(fileName.lastIndexOf(".")+1);
         String nameWithoutExtension = fileName.substring(0, fileName.lastIndexOf("."));
         newFile = new File(myDir, fileName);
         for (int num = 1; newFile.exists(); num++) {

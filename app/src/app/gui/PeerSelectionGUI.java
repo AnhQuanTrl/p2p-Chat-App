@@ -40,6 +40,10 @@ public class PeerSelectionGUI implements Runnable {
             @Override
             public void windowClosing(WindowEvent e) {
                 if (fetchWorker != null) fetchWorker.setCancel(true);
+                socketListener.cancel(true);
+                SwingUtilities.invokeLater(new LoginGUI());
+                Metadata.getInstance().disposeAllFrame();
+                frame.dispose();
             }
         });
         JPanel panel = new JPanel();
