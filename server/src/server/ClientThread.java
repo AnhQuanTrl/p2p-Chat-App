@@ -106,7 +106,6 @@ public class ClientThread extends Thread{
 
         } catch (IOException ex) {
             server.removeUser(this);
-            System.out.println("here");
             server.loginUser.remove(username);
             try {
                 socket.close();

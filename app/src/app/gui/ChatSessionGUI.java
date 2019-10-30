@@ -182,7 +182,6 @@ public class ChatSessionGUI implements Runnable {
         textField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(textField.getText());
                 writer.write("/MESSAGE " + textField.getText());
                 try {
                     StyledDocument doc = txtChat.getStyledDocument();

@@ -96,7 +96,6 @@ public class Server {
         Runtime.getRuntime().addShutdownHook(new Thread(){
             @Override
             public void run() {
-                System.out.println("heres");
                 server.updateCSV();
             }
         });
@@ -142,7 +141,6 @@ public class Server {
             Set<String> friendSet = friends.get(username);
             for (String friend : friendSet) {
                 stringBuilder.append(friend).append(",");
-                System.out.println(loginUser);
                 if (loginUser.containsKey(friend)) stringBuilder.append(loginUser.get(friend));
                 stringBuilder.append(" ");
             }

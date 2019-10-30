@@ -10,7 +10,6 @@ public class UserListCellRendered extends DefaultListCellRenderer {
         if (value instanceof UserIP) {
             UserIP userIP = (UserIP)value;
             setText(userIP.getUsername());
-            System.out.println(userIP.getUsername());
             if (userIP.getInetAddress() == null) {
                 setEnabled(false);
                 setDisabledIcon(this.getIcon());

@@ -53,7 +53,6 @@ public class FileAssembler  extends SwingWorker<Void, Void> {
                 for (String text : cache) {
                     byte[] result = Base64.getDecoder().decode(text);
                     fileOut.write(result);
-                    System.out.println(result);
                 }
             }
         }  catch (IOException e) {

@@ -36,7 +36,6 @@ public class FetchWorker extends SwingWorker<Void, String> {
             while (!isCancel) {
                 writer.println("/FETCH " + Metadata.getInstance().getUsername());
                 String res = reader.readLine();
-                System.out.println(res);
                 publish(res);
                 Thread.sleep(3000);
             }
