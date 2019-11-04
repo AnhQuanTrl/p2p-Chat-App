@@ -167,5 +167,6 @@ public class Server {
         Set<String> set = users.keySet().stream().filter(s -> s.contains(query)).collect(Collectors.toSet());
         return set;
     }
+
 }
 
