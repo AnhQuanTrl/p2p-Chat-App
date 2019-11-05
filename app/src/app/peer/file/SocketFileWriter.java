@@ -19,17 +19,16 @@ public class SocketFileWriter extends SwingWorker<Void, Void> {
     private File file;
     @Override
     protected Void doInBackground() throws Exception {
-        byte[] bytes = new byte[4096];
+        byte[] bytes = new byte[4096*4];
         InputStream in = new FileInputStream(file);
         int count;
-        writer.write("/FILE-BEGIN");
+        writer.addFilePart("/FILE-BEGIN");
         while ((count = in.read(bytes)) > 0) {
             byte[] tmp = Arrays.copyOf(bytes, count);
             String s = Base64.getEncoder().encodeToString(tmp);
-            writer.write("/FILE-PART " + s);
-            Thread.sleep(5);
+            writer.addFilePart("/FILE-PART " + s);
         }
-        writer.write("/FILE-END");
+        writer.addFilePart("/FILE-END");
         in.close();
         return null;
     }

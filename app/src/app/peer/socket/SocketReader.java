@@ -52,9 +52,9 @@ public class SocketReader extends SwingWorker<Void, String> {
                             returnMessage = "Your peer deny the chat request";
                             return null;
                         case "/REQUEST-FILE":
-                            int dialogResult = JOptionPane.showConfirmDialog(null, "accept file transfer "+ args[1], "File Transfer",JOptionPane.YES_NO_OPTION);
+                            int dialogResult = JOptionPane.showConfirmDialog(null, "accept file transfer "+ serverInput.substring(serverInput.indexOf(" ")+1), "File Transfer",JOptionPane.YES_NO_OPTION);
                             if (dialogResult == JOptionPane.YES_OPTION) {
-                                writer.write("/ACCEPT-FILE " + args[1]);
+                                writer.write("/ACCEPT-FILE " +serverInput.substring(serverInput.indexOf(" ")+1));
                                 fileName = serverInput.substring(serverInput.indexOf(" ")+1);
                             } else {
                                 writer.write("/DENY-FILE " + args[1]);

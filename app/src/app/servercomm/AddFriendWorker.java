@@ -27,7 +27,7 @@ public class AddFriendWorker extends SwingWorker<Void, String> {
             if (response.equals("/ACCEPT-FRIEND-REQUEST")) {
                 message = "The peer has been added as your friend";
             } else {
-                message = "Peer already befriended";
+                message = "Cannot add that peer as your friend";
             }
             writer.println("/EXIT");
         }

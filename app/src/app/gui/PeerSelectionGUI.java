@@ -41,7 +41,6 @@ public class PeerSelectionGUI implements Runnable {
             public void windowClosing(WindowEvent e) {
                 if (fetchWorker != null) fetchWorker.setCancel(true);
                 socketListener.cancel(true);
-                SwingUtilities.invokeLater(new LoginGUI());
                 Metadata.getInstance().disposeAllFrame();
                 frame.dispose();
             }

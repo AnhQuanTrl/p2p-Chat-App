@@ -21,6 +21,7 @@ public class FileAssembler  extends SwingWorker<Void, Void> {
     private JFrame frame;
     private String fileName;
     private List<String> fileParts = Collections.synchronizedList(new LinkedList<String>());
+    private StringBuffer stringBuffer = new StringBuffer();
     private File oldFile = null;
     private File newFile = null;
     private String myDir = System.getProperty("user.dir");
@@ -28,6 +29,7 @@ public class FileAssembler  extends SwingWorker<Void, Void> {
         synchronized (fileParts) {
             fileParts.add(filePart);
         }
+//        stringBuffer.append(filePart);
     }
     public void setJobLeft(Boolean jobLeft) {
         this.jobLeft = jobLeft;
@@ -36,21 +38,16 @@ public class FileAssembler  extends SwingWorker<Void, Void> {
     protected Void doInBackground() throws Exception {
         if (fileName == null) return null;
 
-        oldFile = new File(myDir, defaultFileName);
+        oldFile = new File(myDir, defaultFileName + fileName.substring(0, fileName.lastIndexOf(".")));
         try (FileOutputStream fileOut = new FileOutputStream(oldFile)) {
             while (jobLeft || !fileParts.isEmpty()) { //end only if no more job is left and filePart is empty
-                if (fileParts.isEmpty()) continue;
                 List<String> cache = null;
                 synchronized (fileParts) {
                     cache = new LinkedList<>(fileParts);
                     fileParts.clear();
-//                    for (String text : fileParts) {
-//                        byte[] result = Base64.getDecoder().decode(text);
-//                        fileOut.write(result);
-//                    }
-//                    fileParts.clear();
                 }
                 for (String text : cache) {
+                    System.out.println(text);
                     byte[] result = Base64.getDecoder().decode(text);
                     fileOut.write(result);
                 }
